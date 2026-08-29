@@ -3,8 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  (function () {
+    try {
+      var stored = localStorage.getItem('theme');
+      var theme = stored || ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (e) {}
+  })();
+</script>
 <title>Jiho Bae — IT Systems Administrator</title>
 <meta name="description" content="Jiho John Bae — IT Systems Administrator. Cloud identity, security operations, and enterprise automation.">
+<meta name="theme-color" content="#EEF2F1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12181A" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -28,6 +39,22 @@
     --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
+  :root[data-theme="dark"] {
+    --bg: #12181A;
+    --panel: #1A2226;
+    --border: #2B3538;
+    --ink: #E7ECEA;
+    --ink-soft: #9AA6A2;
+    --ink-faint: #64716D;
+    --green: #3DDC91;
+    --green-bg: rgba(61, 220, 145, 0.16);
+    --amber: #E0A94D;
+    --amber-bg: rgba(224, 169, 77, 0.16);
+    --blue: #6FAEE5;
+    --tag-bg: #202A2D;
+    --tag-border: #33403E;
+  }
+
   * { box-sizing: border-box; }
 
   html { scroll-behavior: smooth; }
@@ -39,6 +66,11 @@
     font-family: var(--font-sans);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  .sysinfo, .job, .footer, .tag, .download-btn, .theme-toggle {
+    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.15s ease;
   }
 
   a { color: var(--blue); text-decoration: none; }
@@ -80,6 +112,9 @@
   @media (prefers-reduced-motion: reduce) {
     .status-dot.active { animation: none; }
     html { scroll-behavior: auto; }
+    body, .sysinfo, .job, .footer, .tag, .download-btn, .theme-toggle {
+      transition: none;
+    }
   }
 
   .mono { font-family: var(--font-mono); }
@@ -107,15 +142,38 @@
   .sysinfo-top {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 10px;
     margin-bottom: 18px;
   }
+  .status-line { display: flex; align-items: center; gap: 10px; }
   .sysinfo-top .label {
     font-size: 0.72rem;
     letter-spacing: 0.1em;
     color: var(--green);
     font-weight: 500;
   }
+
+  /* ---------- theme toggle ---------- */
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    color: var(--ink-soft);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover { color: var(--ink); border-color: var(--ink-faint); }
+  .theme-toggle .icon-sun { display: none; }
+  .theme-toggle .icon-moon { display: block; }
+  :root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+  :root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
   .sysinfo h1 {
     font-family: var(--font-mono);
     font-weight: 600;
@@ -292,6 +350,17 @@
     .skill-group { grid-template-columns: 1fr; gap: 6px; }
     .job-head { flex-wrap: wrap; }
     .job-dates { margin-left: 20px; }
+    .block { margin-top: 36px; }
+  }
+
+  @media (max-width: 400px) {
+    .wrap { padding: 24px 14px 56px; }
+    .sysinfo { padding: 18px 16px; border-radius: 8px; }
+    .sysinfo-top { margin-bottom: 14px; }
+    .theme-toggle { width: 28px; height: 28px; }
+    .job-title-group h3 { font-size: 1rem; }
+    .tag { font-size: 0.73rem; padding: 3px 8px; }
+    .footer { justify-content: center; text-align: center; }
   }
 </style>
 </head>
@@ -300,8 +369,26 @@
 
   <header class="sysinfo fade-in" style="animation-delay: 0s;">
     <div class="sysinfo-top">
-      <span class="status-dot active" aria-hidden="true"></span>
-      <span class="mono label">STATUS: OPEN TO OPPORTUNITIES</span>
+      <div class="status-line">
+        <span class="status-dot active" aria-hidden="true"></span>
+        <span class="mono label">STATUS: OPEN TO OPPORTUNITIES</span>
+      </div>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <line x1="12" y1="2" x2="12" y2="4"></line>
+          <line x1="12" y1="20" x2="12" y2="22"></line>
+          <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
+          <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
+          <line x1="2" y1="12" x2="4" y2="12"></line>
+          <line x1="20" y1="12" x2="22" y2="12"></line>
+          <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
+          <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
+        </svg>
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
     </div>
     <h1>Jiho John Bae</h1>
     <p class="role">IT Systems Administrator</p>
@@ -366,9 +453,9 @@
         </div>
         <ul class="job-bullets">
           <li>Maintained and monitored Microsoft, SQL, and Linux servers used by engineers for launch operations.</li>
-          <li>Created a patch management schedule for all servers ensuring compliance and security for each system.</li>
-          <li>Conducted audits via vSphere to identify and remediate vulnerable systems to reduce organizational risk.</li>
-          <li>Researched and reviewed emerging cyberthreats and KB articles to ensure good cybersecurity practices.</li>
+          <li>Created a patch management schedule for all servers ensuring compliance and security.</li>
+          <li>Conducted audits via vSphere to identify and remediate vulnerable systems to reduce risk.</li>
+          <li>Reviewed emerging cyberthreats and KB articles to ensure good cybersecurity practices.</li>
           <li>Created documentation for patch processes across Windows, SQL, and Linux OS environments.</li>
         </ul>
       </li>
@@ -477,5 +564,22 @@
   </footer>
 
 </div>
+<script>
+  (function () {
+    var btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    var root = document.documentElement;
+    function sync() {
+      btn.setAttribute('aria-pressed', root.getAttribute('data-theme') === 'dark' ? 'true' : 'false');
+    }
+    sync();
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      sync();
+    });
+  })();
+</script>
 </body>
 </html>
