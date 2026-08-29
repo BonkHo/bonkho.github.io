@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jiho Bae — IT Systems Administrator</title>
+<meta name="description" content="Jiho John Bae — IT Systems Administrator. Cloud identity, security operations, and enterprise automation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EEF2F1;
+    --panel: #FFFFFF;
+    --border: #DBE2E1;
+    --ink: #14181C;
+    --ink-soft: #545F5C;
+    --ink-faint: #8A948F;
+    --green: #1F8A5F;
+    --green-bg: #E4F2EA;
+    --amber: #A8701A;
+    --amber-bg: #F7EDDD;
+    --blue: #2B6CB0;
+    --tag-bg: #E7ECEA;
+    --tag-border: #CCD7D2;
+    --max-w: 760px;
+    --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .wrap {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ---------- status dot ---------- */
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-dot.active {
+    background: var(--green);
+    box-shadow: 0 0 0 3px var(--green-bg);
+    animation: pulse-dot 2.4s ease-in-out infinite;
+  }
+  .status-dot.archived {
+    background: transparent;
+    border: 1.5px solid var(--ink-faint);
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .status-dot.active { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+
+  .mono { font-family: var(--font-mono); }
+
+  /* ---------- entrance ---------- */
+  .fade-in {
+    opacity: 0;
+    animation: fade-up 0.6s ease forwards;
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in { opacity: 1; animation: none; }
+  }
+
+  /* ---------- header / sysinfo panel ---------- */
+  .sysinfo {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 32px;
+  }
+  .sysinfo-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .sysinfo-top .label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--green);
+    font-weight: 500;
+  }
+  .sysinfo h1 {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: clamp(1.6rem, 4.5vw, 2.2rem);
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .sysinfo .role {
+    margin: 0 0 22px;
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+  }
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 24px;
+    margin: 0;
+    border-top: 1px dashed var(--border);
+    padding-top: 18px;
+  }
+  .meta-row { display: flex; gap: 8px; font-size: 0.9rem; }
+  .meta-row dt {
+    font-family: var(--font-mono);
+    color: var(--ink-faint);
+    font-size: 0.78rem;
+    min-width: 64px;
+    padding-top: 2px;
+  }
+  .meta-row dd { margin: 0; color: var(--ink); word-break: break-word; }
+
+  /* ---------- section blocks ---------- */
+  .block { margin-top: 44px; }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    color: var(--ink-faint);
+    text-transform: lowercase;
+    margin: 0 0 16px;
+    font-weight: 500;
+  }
+
+  .summary-text {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--ink);
+    max-width: 62ch;
+  }
+
+  /* ---------- work experience ---------- */
+  .job-list { list-style: none; margin: 0; padding: 0; }
+  .job { padding: 20px 0; border-top: 1px solid var(--border); }
+  .job:first-child { border-top: none; padding-top: 0; }
+  .job-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .job-head .status-dot { margin-top: 7px; }
+  .job-title-group { flex: 1; min-width: 0; }
+  .job-title-group h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+  .job-title-group p {
+    margin: 2px 0 0;
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+  }
+  .job-dates {
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    white-space: nowrap;
+    padding-top: 3px;
+  }
+  .job-status-word {
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: block;
+    text-align: right;
+  }
+  .job-status-word.active { color: var(--green); }
+  .job-status-word.archived { color: var(--ink-faint); }
+  .job-bullets {
+    margin: 12px 0 0 20px;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+  }
+  .job-bullets li { font-size: 0.94rem; color: var(--ink); }
+
+  /* ---------- skills ---------- */
+  .skill-groups { display: grid; gap: 16px; }
+  .skill-group {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .skill-key {
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    padding-top: 5px;
+  }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
+    color: var(--ink);
+    padding: 3px 9px;
+    border-radius: 5px;
+  }
+
+  /* ---------- certs / education ---------- */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .cred-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .cred-list li {
+    display: flex;
+    gap: 9px;
+    font-size: 0.92rem;
+    align-items: baseline;
+  }
+  .check {
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .cred-issuer { color: var(--ink-faint); font-size: 0.85rem; }
+
+  /* ---------- footer ---------- */
+  .footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .download-btn {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--ink);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 9px 16px;
+    border-radius: 7px;
+    text-decoration: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .download-btn:hover {
+    border-color: var(--green);
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+  .footnote { color: var(--ink-faint); font-size: 0.78rem; margin: 0; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 620px) {
+    .wrap { padding: 32px 18px 64px; }
+    .sysinfo { padding: 22px 20px; }
+    .meta { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; gap: 28px; }
+    .skill-group { grid-template-columns: 1fr; gap: 6px; }
+    .job-head { flex-wrap: wrap; }
+    .job-dates { margin-left: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="sysinfo fade-in" style="animation-delay: 0s;">
+    <div class="sysinfo-top">
+      <span class="status-dot active" aria-hidden="true"></span>
+      <span class="mono label">STATUS: OPEN TO OPPORTUNITIES</span>
+    </div>
+    <h1>Jiho John Bae</h1>
+    <p class="role">IT Systems Administrator</p>
+    <dl class="meta">
+      <div class="meta-row">
+        <dt>location</dt><dd>Torrance, CA</dd>
+      </div>
+      <div class="meta-row">
+        <dt>email</dt><dd><a href="mailto:john21225@gmail.com">john21225@gmail.com</a></dd>
+      </div>
+      <div class="meta-row">
+        <dt>phone</dt><dd><a href="tel:+13104041276">(310) 404-1276</a></dd>
+      </div>
+      <div class="meta-row">
+        <dt>github</dt><dd><a href="https://github.com/BonkHo" target="_blank" rel="noopener">github.com/BonkHo</a></dd>
+      </div>
+    </dl>
+  </header>
+
+  <section class="block fade-in" style="animation-delay: 0.08s;">
+    <h2 class="section-label">// summary</h2>
+    <p class="summary-text">IT Systems Administrator with 4+ years supporting users and infrastructure. Experienced in cloud identity management (Entra ID, Intune MDM), security operations, and enterprise automation using Microsoft Power Platform. CompTIA Security+ certified and actively pursuing a Microsoft AZ-104 certification.</p>
+  </section>
+
+  <section class="block fade-in" style="animation-delay: 0.14s;">
+    <h2 class="section-label">// work_experience</h2>
+    <ul class="job-list">
+
+      <li class="job">
+        <div class="job-head">
+          <span class="status-dot active" aria-hidden="true"></span>
+          <div class="job-title-group">
+            <h3>IT Systems Administrator</h3>
+            <p>C3 Systems and Security</p>
+          </div>
+          <div class="job-dates mono">
+            2025.05 — present
+            <span class="job-status-word active">active</span>
+          </div>
+        </div>
+        <ul class="job-bullets">
+          <li>Provided Tier 1–2 help desk support ranging from hardware, software, and vendor support.</li>
+          <li>Managed Microsoft 365 environments using Exchange, Teams, SharePoint, Intune, Entra ID.</li>
+          <li>Configured and managed networking equipment such as SonicWall firewalls and UniFi network stacks.</li>
+          <li>Performed compromised account remediation, system vulnerability checks, and incident response.</li>
+          <li>Scoped and worked on projects including server migrations, mail migrations, and network refreshes.</li>
+          <li>Created and maintained technical documentation in efforts to standardize work processes.</li>
+        </ul>
+      </li>
+
+      <li class="job">
+        <div class="job-head">
+          <span class="status-dot archived" aria-hidden="true"></span>
+          <div class="job-title-group">
+            <h3>Server Administrator</h3>
+            <p>Rocket Lab</p>
+          </div>
+          <div class="job-dates mono">
+            2024.05 — 2025.05
+            <span class="job-status-word archived">archived</span>
+          </div>
+        </div>
+        <ul class="job-bullets">
+          <li>Maintained and monitored Microsoft, SQL, and Linux servers used by engineers for launch operations.</li>
+          <li>Created a patch management schedule for all servers ensuring compliance and security for each system.</li>
+          <li>Conducted audits via vSphere to identify and remediate vulnerable systems to reduce organizational risk.</li>
+          <li>Researched and reviewed emerging cyberthreats and KB articles to ensure good cybersecurity practices.</li>
+          <li>Created documentation for patch processes across Windows, SQL, and Linux OS environments.</li>
+        </ul>
+      </li>
+
+      <li class="job">
+        <div class="job-head">
+          <span class="status-dot archived" aria-hidden="true"></span>
+          <div class="job-title-group">
+            <h3>IT Systems Administrator &amp; Automation Specialist</h3>
+            <p>Honu Services Inc.</p>
+          </div>
+          <div class="job-dates mono">
+            2022.01 — 2023.10
+            <span class="job-status-word archived">archived</span>
+          </div>
+        </div>
+        <ul class="job-bullets">
+          <li>Provided help desk support for basic hardware and software troubleshooting.</li>
+          <li>Managed user accounts, mailboxes, groups, and policies in the Microsoft 365 environment.</li>
+          <li>Managed user access and group policies for AWS EC2 instances.</li>
+          <li>Designed and deployed automated workflows across all departments using Microsoft Power Platform.</li>
+          <li>Created and revised technical documentation for work processes and automations.</li>
+        </ul>
+      </li>
+
+    </ul>
+  </section>
+
+  <section class="block fade-in" style="animation-delay: 0.2s;">
+    <h2 class="section-label">// technical_skills</h2>
+    <div class="skill-groups">
+      <div class="skill-group">
+        <span class="skill-key mono">cloud</span>
+        <div class="tags">
+          <span class="tag">AWS</span>
+          <span class="tag">Google Cloud Platform</span>
+          <span class="tag">Microsoft Azure</span>
+          <span class="tag">Microsoft 365</span>
+          <span class="tag">vSphere</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <span class="skill-key mono">networking</span>
+        <div class="tags">
+          <span class="tag">SonicWall</span>
+          <span class="tag">UniFi</span>
+          <span class="tag">TCP/IP</span>
+          <span class="tag">DNS</span>
+          <span class="tag">DHCP</span>
+          <span class="tag">VPN</span>
+          <span class="tag">Subnetting</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <span class="skill-key mono">automation</span>
+        <div class="tags">
+          <span class="tag">Power Automate</span>
+          <span class="tag">Power Apps</span>
+          <span class="tag">PowerShell</span>
+          <span class="tag">Python</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">Claude</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <span class="skill-key mono">security</span>
+        <div class="tags">
+          <span class="tag">Incident Response</span>
+          <span class="tag">Patch Management</span>
+          <span class="tag">Vulnerability Audits</span>
+          <span class="tag">SIEM</span>
+          <span class="tag">Compliance</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <span class="skill-key mono">systems</span>
+        <div class="tags">
+          <span class="tag">Windows Server</span>
+          <span class="tag">Linux</span>
+          <span class="tag">SQL Server</span>
+          <span class="tag">macOS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block two-col fade-in" style="animation-delay: 0.26s;">
+    <div>
+      <h2 class="section-label">// certifications</h2>
+      <ul class="cred-list">
+        <li><span class="check">✓</span><span>CompTIA Security+ <span class="cred-issuer">— CompTIA</span></span></li>
+        <li><span class="check">✓</span><span>Google Cybersecurity Certificate <span class="cred-issuer">— Google</span></span></li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="section-label">// education</h2>
+      <ul class="cred-list">
+        <li><span class="check">✓</span><span>B.S. Computer Information Systems <span class="cred-issuer">— Cal Poly Pomona</span></span></li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="footer fade-in" style="animation-delay: 0.32s;">
+    <a class="download-btn" href="Jiho_Bae_Resume.pdf" download>↓ download_resume.pdf</a>
+    <p class="mono footnote">last updated 2026.08</p>
+  </footer>
+
+</div>
+</body>
+</html>
