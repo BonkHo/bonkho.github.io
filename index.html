@@ -375,8 +375,21 @@
     transition: box-shadow .3s ease;
   }
   .interest:nth-child(-n+2) .shot { aspect-ratio: 4 / 3; }
+  button.shot { display: block; width: 100%; padding: 0; border: 0; font: inherit; color: inherit; cursor: zoom-in; }
   .shot img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .8s var(--ease); }
   .interest:hover .shot img { transform: scale(1.04); }
+  .shot .count {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    color: #F2F2F5;
+    background: rgba(12, 12, 15, .62);
+    -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px);
+  }
   /* until a photo lands: a quiet dotted tile with the interest's icon */
   .shot[data-placeholder] { display: grid; place-items: center; }
   .shot[data-placeholder]::before {
@@ -392,6 +405,47 @@
   .interest:hover .shot { box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 55%, transparent); }
   .interest:hover .shot .ico { transform: translateY(-2px) scale(1.06); }
   .cap { display: block; margin-top: 10px; font-size: 0.88rem; }
+
+  /* ---------- photo viewer ---------- */
+  html:has(.viewer[open]) { overflow: hidden; }
+  .viewer {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #F2F2F5;
+  }
+  .viewer::backdrop { background: rgba(8, 8, 10, .9); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  .viewer[open] { display: grid; grid-template-rows: 1fr auto; animation: viewer-in .35s var(--ease); }
+  @keyframes viewer-in { from { opacity: 0; transform: scale(.985); } }
+  .viewer figure { margin: 0; min-height: 0; display: grid; place-items: center; padding: 64px 72px 0; }
+  .viewer img { max-width: 100%; max-height: calc(100dvh - 160px); object-fit: contain; border-radius: 10px; transition: opacity .25s ease; }
+  .viewer img.loading { opacity: .35; }
+  .viewer-bar { display: flex; align-items: center; justify-content: center; gap: 18px; padding: 18px 16px 26px; font-size: 0.82rem; }
+  .viewer-bar .where { min-width: 13ch; text-align: center; color: #C9CAD1; font-variant-numeric: tabular-nums; }
+  .viewer button {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .06);
+    color: inherit;
+    cursor: pointer;
+    transition: background-color .2s ease;
+  }
+  .viewer button:hover { background: rgba(255, 255, 255, .14); }
+  .viewer .close { position: absolute; top: 14px; right: 14px; }
+
+  @media (max-width: 560px) {
+    .viewer figure { padding: 60px 12px 0; }
+  }
 
   /* ---------- footer ---------- */
   .foot {
@@ -660,13 +714,28 @@
       <section id="interests" data-spy aria-labelledby="h-int">
         <h2 class="sec-h" id="h-int">Interests</h2>
         <p class="sec-note">The parts that don't fit on a resume.</p>
-        <!-- photos: put <img src="images/….jpg" alt="…"> inside .shot and drop data-placeholder + the icon -->
+        <!-- photo sets live in GALLERIES (script below); tiles still waiting on photos keep data-placeholder + an icon -->
         <ul class="interests" data-reveal="sketch">
           <li class="interest" data-reveal-child>
-            <div class="shot" data-placeholder="photo">
-              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 19.5L9 8.5l4 6.5 2.5-4 6 8.5z"/><path d="M7.4 11.2l1.6 1.3 1.4-1.6"/></svg>
-            </div>
+            <button type="button" class="shot" data-gallery="climbing" aria-label="Rock climbing: view 5 photos">
+              <img src="images/interests/climbing-1-sm.webp" alt="" width="640" height="800" loading="lazy" style="object-position: 50% 28%">
+              <span class="count" aria-hidden="true">5 photos</span>
+            </button>
             <span class="cap">Rock climbing</span>
+          </li>
+          <li class="interest" data-reveal-child>
+            <button type="button" class="shot" data-gallery="travel" aria-label="Traveling: view 5 photos">
+              <img src="images/interests/travel-1-sm.webp" alt="" width="600" height="800" loading="lazy" style="object-position: 50% 40%">
+              <span class="count" aria-hidden="true">5 photos</span>
+            </button>
+            <span class="cap">Traveling</span>
+          </li>
+          <li class="interest" data-reveal-child>
+            <button type="button" class="shot" data-gallery="food" aria-label="Food: view 4 photos">
+              <img src="images/interests/food-1-sm.webp" alt="" width="600" height="800" loading="lazy" style="object-position: 50% 62%">
+              <span class="count" aria-hidden="true">4 photos</span>
+            </button>
+            <span class="cap">Food</span>
           </li>
           <li class="interest" data-reveal-child>
             <div class="shot" data-placeholder="photo">
@@ -680,18 +749,6 @@
             </div>
             <span class="cap">Technology</span>
           </li>
-          <li class="interest" data-reveal-child>
-            <div class="shot" data-placeholder="photo">
-              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12.5h17a8.5 8.5 0 0 1-17 0z"/><path d="M12 12.5l3.5-9M15.5 12.5l4.5-8"/></svg>
-            </div>
-            <span class="cap">Food</span>
-          </li>
-          <li class="interest" data-reveal-child>
-            <div class="shot" data-placeholder="photo">
-              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.4 2.5 3.6 5.5 3.6 9s-1.2 6.5-3.6 9c-2.4-2.5-3.6-5.5-3.6-9S9.6 5.5 12 3z"/></svg>
-            </div>
-            <span class="cap">Traveling</span>
-          </li>
         </ul>
       </section>
 
@@ -703,6 +760,22 @@
     </div>
   </main>
 </div>
+
+<dialog class="viewer" aria-label="Photos">
+  <button type="button" class="close" data-close aria-label="Close photos">
+    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <figure><img src="images/interests/climbing-1-sm.webp" alt=""></figure>
+  <div class="viewer-bar">
+    <button type="button" data-step="-1" aria-label="Previous photo">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6"/></svg>
+    </button>
+    <span class="where" aria-live="polite"></span>
+    <button type="button" data-step="1" aria-label="Next photo">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+</dialog>
 
 <script>
   (function () {
@@ -804,6 +877,74 @@
     }, { passive: true });
     window.addEventListener('resize', place);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+
+    // ---- photo viewer: each interest tile opens its own set ----
+    var GALLERIES = {
+      climbing: { title: 'Rock climbing', photos: [
+        'Sitting on top of a tall pointed granite boulder against a blue sky',
+        'Bouldering on a sandstone face, seen from above',
+        'Crouched at the base of a boulder in climbing shoes, under the trees',
+        'One arm raised with a chalk bag on, rocky hills behind',
+        'Two climbers peeking over the top of a granite boulder'
+      ] },
+      travel: { title: 'Traveling', photos: [
+        'Rows of colorful paper lanterns strung over a street',
+        'Heungnyemun Gate at Gyeongbokgung Palace in Seoul',
+        'In front of a painted Korean pavilion beside a pond',
+        'Next to a stone bear sculpture among autumn leaves',
+        'A bronze bell hanging under banyan trees'
+      ] },
+      food: { title: 'Food', photos: [
+        'A round table set with rooster-pattern bowls beside a harbor full of boats',
+        'Tangerines and persimmons for sale outside a corner shop in Korea',
+        'A seafood seller cleaning fish on a small boat, seen from above',
+        'A soft-serve cone in front of a Mister Softee truck at night'
+      ] }
+    };
+    var viewer = document.querySelector('.viewer');
+    var vImg = viewer.querySelector('img');
+    var vWhere = viewer.querySelector('.where');
+    var set = null, idx = 0, opener = null;
+
+    function src(key, i) { return 'images/interests/' + key + '-' + (i + 1) + '.webp'; }
+    function show(i) {
+      var g = GALLERIES[set];
+      idx = (i + g.photos.length) % g.photos.length;
+      vImg.classList.add('loading');
+      vImg.onload = function () { vImg.classList.remove('loading'); };
+      vImg.src = src(set, idx);
+      vImg.alt = g.photos[idx];
+      vWhere.textContent = g.title + ' · ' + (idx + 1) + ' / ' + g.photos.length;
+      // warm the next one so stepping through feels instant
+      new Image().src = src(set, (idx + 1) % g.photos.length);
+    }
+    document.querySelectorAll('[data-gallery]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        set = b.getAttribute('data-gallery');
+        opener = b;
+        show(0);
+        viewer.showModal();
+      });
+    });
+    viewer.addEventListener('click', function (e) {
+      var step = e.target.closest('[data-step]');
+      if (step) return show(idx + +step.getAttribute('data-step'));
+      // clicking the dark area around the photo closes, like most viewers
+      if (e.target.closest('[data-close]') || e.target === viewer || e.target.tagName === 'FIGURE') viewer.close();
+    });
+    viewer.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') show(idx + 1);
+      if (e.key === 'ArrowLeft') show(idx - 1);
+    });
+    viewer.addEventListener('close', function () { if (opener) opener.focus(); });
+    var touchX = null;
+    viewer.addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, { passive: true });
+    viewer.addEventListener('touchend', function (e) {
+      if (touchX === null) return;
+      var dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 40) show(idx + (dx < 0 ? 1 : -1));
+      touchX = null;
+    });
   })();
 </script>
 </body>
