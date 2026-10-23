@@ -1,583 +1,942 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script>
+  // Dark by default; remember the visitor's choice if they switched to light.
   (function () {
-    try {
-      var stored = localStorage.getItem('theme');
-      var theme = stored || ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
-      document.documentElement.setAttribute('data-theme', theme);
-    } catch (e) {}
+    var t = 'dark';
+    try { if (localStorage.getItem('theme') === 'light') t = 'light'; } catch (e) {}
+    document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.classList.add('js');
   })();
 </script>
-<title>Jiho Bae — IT Systems Administrator</title>
-<meta name="description" content="Jiho John Bae — IT Systems Administrator. Cloud identity, security operations, and enterprise automation.">
-<meta name="theme-color" content="#EEF2F1" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#12181A" media="(prefers-color-scheme: dark)">
+<title>Jiho John Bae · IT Systems Administrator</title>
+<meta name="description" content="Jiho John Bae, IT Systems Administrator in San Francisco, CA. Cloud identity, security operations, and enterprise automation.">
+<link rel="canonical" href="https://bonkho.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://bonkho.github.io/">
+<meta property="og:title" content="Jiho John Bae · IT Systems Administrator">
+<meta property="og:description" content="IT Systems Administrator in San Francisco, CA. Cloud identity, security operations, and enterprise automation.">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#121316">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2315171B'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23A78BFA'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sometype+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #EEF2F1;
-    --panel: #FFFFFF;
-    --border: #DBE2E1;
-    --ink: #14181C;
-    --ink-soft: #545F5C;
-    --ink-faint: #8A948F;
-    --green: #1F8A5F;
-    --green-bg: #E4F2EA;
-    --amber: #A8701A;
-    --amber-bg: #F7EDDD;
-    --blue: #2B6CB0;
-    --tag-bg: #E7ECEA;
-    --tag-border: #CCD7D2;
-    --max-w: 760px;
-    --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
-    --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font: 'Sometype Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --aside-w: 368px;
   }
-
   :root[data-theme="dark"] {
-    --bg: #12181A;
-    --panel: #1A2226;
-    --border: #2B3538;
-    --ink: #E7ECEA;
-    --ink-soft: #9AA6A2;
-    --ink-faint: #64716D;
-    --green: #3DDC91;
-    --green-bg: rgba(61, 220, 145, 0.16);
-    --amber: #E0A94D;
-    --amber-bg: rgba(224, 169, 77, 0.16);
-    --blue: #6FAEE5;
-    --tag-bg: #202A2D;
-    --tag-border: #33403E;
+    --accent: #A78BFA;
+    --bg: #121316;
+    --aside-bg: #15171B;
+    --ink: #ECEDF0;
+    --soft: #A6AAB3;
+    --faint: #848993;
+    --line: #25282E;
+    --line-strong: #353943;
+    --dot: #343842;
+    --raise: #1B1D22;
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --accent: #6D28D9;
+    --bg: #F6F6F3;
+    --aside-bg: #EFEFEA;
+    --ink: #15171A;
+    --soft: #474C54;
+    --faint: #5D626A;
+    --line: #DDDDD6;
+    --line-strong: #C6C6BE;
+    --dot: #C9C9C1;
+    --raise: #FFFFFF;
+    color-scheme: light;
   }
 
-  * { box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scrollbar-color: var(--line-strong) var(--bg); }
   body {
     margin: 0;
     background: var(--bg);
     color: var(--ink);
-    font-family: var(--font-sans);
-    line-height: 1.6;
+    font-family: var(--font);
+    font-size: 0.95rem;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
-    transition: background-color 0.25s ease, color 0.25s ease;
+    caret-color: var(--accent);
+    transition: background-color .3s ease, color .3s ease;
+  }
+  ::selection { background: color-mix(in oklab, var(--accent) 34%, transparent); color: var(--ink); }
+  a { color: inherit; text-decoration-color: color-mix(in oklab, var(--accent) 60%, transparent); text-underline-offset: 0.22em; text-decoration-thickness: 1px; }
+  a:hover { text-decoration-color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+  svg.ico { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ================= layout ================= */
+  .page { display: grid; grid-template-columns: var(--aside-w) minmax(0, 1fr); min-height: 100vh; }
+
+  .aside {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 36px 32px;
+    background: var(--aside-bg);
+    border-right: 1px solid var(--line);
+    isolation: isolate;
+  }
+  .aside::-webkit-scrollbar { display: none; }
+  /* dot grid lives only here, fading out toward the reading pane */
+  .aside::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: radial-gradient(var(--dot) 1px, transparent 1.3px);
+    background-size: 16px 16px;
+    -webkit-mask-image: linear-gradient(to right, #000 0%, rgba(0,0,0,.55) 45%, transparent 100%);
+            mask-image: linear-gradient(to right, #000 0%, rgba(0,0,0,.55) 45%, transparent 100%);
+    pointer-events: none;
   }
 
-  .sysinfo, .job, .footer, .tag, .download-btn, .theme-toggle {
-    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.15s ease;
-  }
-
-  a { color: var(--blue); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  a:focus-visible,
-  button:focus-visible {
-    outline: 2px solid var(--blue);
-    outline-offset: 3px;
-    border-radius: 2px;
-  }
-
-  .wrap {
-    max-width: var(--max-w);
-    margin: 0 auto;
-    padding: 48px 24px 80px;
-  }
-
-  /* ---------- status dot ---------- */
-  .status-dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
+  /* ---------- identity ---------- */
+  .id-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .avatar {
+    width: 76px;
+    height: 76px;
     border-radius: 50%;
-    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    font-weight: 600;
+    font-size: 1.35rem;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+    background: color-mix(in oklab, var(--accent) 13%, var(--aside-bg));
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 38%, transparent), 0 6px 16px -10px rgba(0,0,0,.45);
   }
-  .status-dot.active {
-    background: var(--green);
-    box-shadow: 0 0 0 3px var(--green-bg);
-    animation: pulse-dot 2.4s ease-in-out infinite;
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .theme-btn {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 11px;
+    background: var(--bg);
+    color: var(--soft);
+    cursor: pointer;
+    transition: color .2s ease, border-color .2s ease, transform .2s var(--ease);
   }
-  .status-dot.archived {
-    background: transparent;
-    border: 1.5px solid var(--ink-faint);
+  .theme-btn:hover { color: var(--ink); border-color: var(--faint); }
+  .theme-btn:active { transform: scale(.94); }
+  .theme-btn .sun { display: none; }
+  :root[data-theme="dark"] .theme-btn .sun { display: block; }
+  :root[data-theme="dark"] .theme-btn .moon { display: none; }
+
+  .name { margin: 22px 0 2px; font-size: 1.55rem; line-height: 1.2; font-weight: 600; letter-spacing: -0.02em; }
+  .role { margin: 0; color: var(--soft); font-size: 0.95rem; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    padding: 5px 12px 5px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--ink);
+    background: color-mix(in oklab, var(--accent) 11%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 30%, transparent);
   }
-  @keyframes pulse-dot {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.45; }
+  .pulse { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .pulse::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: ping 2.4s var(--ease) infinite;
   }
-  @media (prefers-reduced-motion: reduce) {
-    .status-dot.active { animation: none; }
-    html { scroll-behavior: auto; }
-    body, .sysinfo, .job, .footer, .tag, .download-btn, .theme-toggle {
-      transition: none;
-    }
+  @keyframes ping {
+    0% { transform: scale(1); opacity: .55; }
+    70%, 100% { transform: scale(2.8); opacity: 0; }
   }
 
-  .mono { font-family: var(--font-mono); }
+  .intro { margin: 18px 0 0; color: var(--soft); font-size: 0.85rem; line-height: 1.65; max-width: 34ch; }
 
-  /* ---------- entrance ---------- */
-  .fade-in {
+  /* ---------- section nav + glide indicator ---------- */
+  .spy { margin-top: 40px; }
+  .spy ul { position: relative; list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .spy a {
+    position: relative;
+    z-index: 1;
+    display: block;
+    padding: 7px 12px 7px 30px;
+    border-radius: 9px;
+    font-size: 0.88rem;
+    color: var(--soft);
+    text-decoration: none;
+    transition: color .3s ease;
+  }
+  .spy a:hover { color: var(--ink); }
+  .spy a[aria-current="true"] { color: var(--ink); }
+  .spy-ind {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 0;
+    height: 0;
+    border-radius: 9px;
+    background: color-mix(in oklab, var(--accent) 12%, transparent);
     opacity: 0;
-    animation: fade-up 0.6s ease forwards;
+    pointer-events: none;
+    transition: transform .55s var(--ease), width .55s var(--ease), height .55s var(--ease), opacity .3s ease;
   }
-  @keyframes fade-up {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
+  .spy-ind::before {
+    content: "";
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    margin-top: -3px;
+    border-radius: 50%;
+    background: var(--accent);
   }
-  @media (prefers-reduced-motion: reduce) {
-    .fade-in { opacity: 1; animation: none; }
-  }
+  .spy-ind.on { opacity: 1; }
+  .spy .out { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line-strong); }
+  .spy .out a { display: flex; align-items: center; gap: 8px; color: var(--accent); font-weight: 600; }
+  .spy .out a:hover { color: var(--accent); background: color-mix(in oklab, var(--accent) 10%, transparent); }
+  .spy .out .ico { width: 15px; height: 15px; stroke-width: 1.8; transition: transform .3s var(--ease); }
+  .spy .out a:hover .ico { transform: translate(2px, -2px); }
 
-  /* ---------- header / sysinfo panel ---------- */
-  .sysinfo {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 28px 32px;
-  }
-  .sysinfo-top {
+  /* ---------- contact + resume ---------- */
+  .aside-foot { margin-top: auto; padding-top: 36px; }
+  .contacts { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+  .contacts a {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 18px;
+    gap: 12px;
+    padding: 5px 0;
+    font-size: 0.82rem;
+    color: var(--soft);
+    text-decoration: none;
+    transition: color .2s ease;
   }
-  .status-line { display: flex; align-items: center; gap: 10px; }
-  .sysinfo-top .label {
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    color: var(--green);
-    font-weight: 500;
-  }
+  .contacts a .ico { color: var(--faint); transition: color .2s ease, transform .3s var(--ease); }
+  .contacts a:hover { color: var(--ink); }
+  .contacts a:hover .ico { color: var(--accent); transform: translateX(1px); }
+  .contacts .short { display: none; }
 
-  /* ---------- theme toggle ---------- */
-  .theme-toggle {
+  .resume-btn {
+    margin-top: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 7px;
-    color: var(--ink-soft);
-    cursor: pointer;
-    flex-shrink: 0;
-  }
-  .theme-toggle:hover { color: var(--ink); border-color: var(--ink-faint); }
-  .theme-toggle .icon-sun { display: none; }
-  .theme-toggle .icon-moon { display: block; }
-  :root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
-  :root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
-  .sysinfo h1 {
-    font-family: var(--font-mono);
+    gap: 10px;
+    padding: 11px 16px;
+    border-radius: 11px;
+    font-size: 0.85rem;
     font-weight: 600;
-    font-size: clamp(1.6rem, 4.5vw, 2.2rem);
-    margin: 0 0 4px;
-    letter-spacing: -0.01em;
+    text-decoration: none;
+    color: var(--bg);
+    background: var(--ink);
+    box-shadow: 0 8px 20px -12px rgba(0,0,0,.6);
+    transition: opacity .25s ease, transform .25s var(--ease);
   }
-  .sysinfo .role {
-    margin: 0 0 22px;
-    color: var(--ink-soft);
-    font-size: 1.05rem;
+  .resume-btn:hover { opacity: .88; transform: translateY(-1px); }
+  .resume-btn:active { transform: translateY(0); }
+  .resume-btn .ico { width: 16px; height: 16px; stroke-width: 1.8; }
+
+  /* ================= reading pane ================= */
+  .main { min-width: 0; }
+  .inner {
+    max-width: 70ch;
+    margin: 0 auto 0 clamp(36px, 7vw, 120px);
+    padding: 104px 32px 0 0;
   }
-  .meta {
+  .lead {
+    margin: 0;
+    font-size: 1.16rem;
+    line-height: 1.75;
+    color: var(--soft);
+    letter-spacing: -0.005em;
+  }
+  .lead strong { color: var(--ink); font-weight: 600; }
+
+  section[data-spy] { padding-top: 104px; scroll-margin-top: 0; }
+  .sec-h {
+    margin: 0 0 28px;
+    font-size: 1.3rem;
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+  .sec-h::after {
+    content: "";
+    display: block;
+    width: 36px;
+    height: 2px;
+    margin-top: 12px;
+    border-radius: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .7s var(--ease);
+  }
+  section.is-active .sec-h::after { transform: scaleX(1); }
+  .sec-note { margin: -16px 0 28px; color: var(--soft); font-size: 0.88rem; }
+
+  /* ---------- experience ---------- */
+  .roles { list-style: none; margin: 0; padding: 0; }
+  .role-item {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px 24px;
-    margin: 0;
-    border-top: 1px dashed var(--border);
-    padding-top: 18px;
+    grid-template-columns: minmax(0, 1fr) 10.5rem;
+    column-gap: 28px;
+    padding: 26px 0;
+    border-top: 1px solid var(--line);
   }
-  .meta-row { display: flex; gap: 8px; font-size: 0.9rem; }
-  .meta-row dt {
-    font-family: var(--font-mono);
-    color: var(--ink-faint);
-    font-size: 0.78rem;
-    min-width: 64px;
-    padding-top: 2px;
-  }
-  .meta-row dd { margin: 0; color: var(--ink); word-break: break-word; }
-
-  /* ---------- section blocks ---------- */
-  .block { margin-top: 44px; }
-  .section-label {
-    font-family: var(--font-mono);
+  .role-item:first-child { border-top: none; padding-top: 4px; }
+  .role-head h3 { margin: 0; font-size: 1.02rem; font-weight: 600; line-height: 1.4; }
+  .role-head p { margin: 3px 0 0; color: var(--soft); font-size: 0.9rem; }
+  .rail {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    text-align: right;
     font-size: 0.8rem;
-    letter-spacing: 0.03em;
-    color: var(--ink-faint);
-    text-transform: lowercase;
-    margin: 0 0 16px;
-    font-weight: 500;
-  }
-
-  .summary-text {
-    margin: 0;
-    font-size: 1rem;
-    color: var(--ink);
-    max-width: 62ch;
-  }
-
-  /* ---------- work experience ---------- */
-  .job-list { list-style: none; margin: 0; padding: 0; }
-  .job { padding: 20px 0; border-top: 1px solid var(--border); }
-  .job:first-child { border-top: none; padding-top: 0; }
-  .job-head {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  .job-head .status-dot { margin-top: 7px; }
-  .job-title-group { flex: 1; min-width: 0; }
-  .job-title-group h3 {
-    margin: 0;
-    font-size: 1.05rem;
-    font-weight: 600;
-  }
-  .job-title-group p {
-    margin: 2px 0 0;
-    color: var(--ink-soft);
-    font-size: 0.92rem;
-  }
-  .job-dates {
-    font-size: 0.78rem;
-    color: var(--ink-faint);
+    color: var(--faint);
+    font-variant-numeric: tabular-nums;
     white-space: nowrap;
     padding-top: 3px;
   }
-  .job-status-word {
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    display: block;
-    text-align: right;
-  }
-  .job-status-word.active { color: var(--green); }
-  .job-status-word.archived { color: var(--ink-faint); }
-  .job-bullets {
-    margin: 12px 0 0 20px;
-    padding: 0;
-    display: grid;
-    gap: 6px;
-  }
-  .job-bullets li { font-size: 0.94rem; color: var(--ink); }
-
-  /* ---------- skills ---------- */
-  .skill-groups { display: grid; gap: 16px; }
-  .skill-group {
-    display: grid;
-    grid-template-columns: 110px 1fr;
-    gap: 14px;
-    align-items: start;
-  }
-  .skill-key {
-    font-size: 0.78rem;
-    color: var(--ink-faint);
-    padding-top: 5px;
-  }
-  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
-  .tag {
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    background: var(--tag-bg);
-    border: 1px solid var(--tag-border);
-    color: var(--ink);
-    padding: 3px 9px;
-    border-radius: 5px;
-  }
-
-  /* ---------- certs / education ---------- */
-  .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-  }
-  .cred-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-  .cred-list li {
-    display: flex;
-    gap: 9px;
+  .rail .live { display: inline-flex; align-items: center; gap: 7px; color: var(--accent); font-weight: 500; }
+  .rail .live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .gist { grid-column: 1; margin: 10px 0 0; max-width: 54ch; font-size: 0.9rem; color: var(--soft); line-height: 1.65; }
+  /* tinted accent button: stands out from the text without a solid fill */
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 28px;
+    padding: 13px 20px 13px 22px;
+    border-radius: 11px;
     font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: color-mix(in oklab, var(--accent) 14%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 45%, transparent);
+    text-decoration: none;
+    transition: transform .25s var(--ease), background-color .25s ease;
+  }
+  .more .ico { width: 17px; height: 17px; stroke-width: 1.9; transition: transform .3s var(--ease); }
+  .more:hover { transform: translateY(-2px); background: color-mix(in oklab, var(--accent) 22%, transparent); }
+  .more:active { transform: translateY(0); }
+  .more:hover .ico { transform: translate(2px, -2px); }
+
+  /* ---------- toolkit ---------- */
+  .kit { margin: 0; display: grid; gap: 0; }
+  .kit-row { display: grid; grid-template-columns: 13ch minmax(0, 1fr); gap: 20px; padding: 13px 0; border-top: 1px dashed var(--line); }
+  .kit-row:first-child { border-top: none; padding-top: 0; }
+  .kit dt { color: var(--faint); font-size: 0.82rem; padding-top: 1px; }
+  .kit dd { margin: 0; }
+  .kit ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px 0; font-size: 0.9rem; }
+  .kit li:not(:last-child)::after { content: "/"; margin: 0 10px; color: var(--line-strong); }
+
+  /* ---------- credentials ---------- */
+  .cred-group + .cred-group { margin-top: 36px; }
+  .cred-h { margin: 0 0 12px; font-size: 0.82rem; font-weight: 500; color: var(--faint); }
+  .creds { list-style: none; margin: 0; padding: 0; }
+  .creds li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px 24px;
     align-items: baseline;
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+    font-size: 0.92rem;
   }
-  .check {
-    color: var(--green);
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    flex-shrink: 0;
+  .creds li:first-child { border-top: none; padding-top: 0; }
+  .creds .by { color: var(--faint); font-size: 0.8rem; text-align: right; }
+  .creds .fresh { display: inline-block; margin-left: 10px; padding: 1px 8px; border-radius: 999px; font-size: 0.72rem; font-weight: 500; color: var(--accent); background: color-mix(in oklab, var(--accent) 12%, transparent); vertical-align: 1px; }
+
+  /* ---------- interests ---------- */
+  .interests { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 14px; }
+  .shot {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--raise);
+    box-shadow: inset 0 0 0 1px var(--line);
+    transition: box-shadow .3s ease;
   }
-  .cred-issuer { color: var(--ink-faint); font-size: 0.85rem; }
+  button.shot { display: block; width: 100%; padding: 0; border: 0; font: inherit; color: inherit; cursor: zoom-in; }
+  .shot img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .8s var(--ease); }
+  .interest:hover .shot img { transform: scale(1.04); }
+  .shot .count {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    color: #F2F2F5;
+    background: rgba(12, 12, 15, .62);
+    -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px);
+  }
+  /* interests without photos: plain text pills under the photo tiles */
+  .also { list-style: none; margin: 26px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .also li {
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    background: var(--raise);
+    box-shadow: inset 0 0 0 1px var(--line-strong);
+  }
+  .interest:hover button.shot { box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 55%, transparent); }
+  .cap { display: block; margin-top: 10px; font-size: 0.88rem; }
+
+  /* ---------- photo viewer ---------- */
+  html:has(.viewer[open]) { overflow: hidden; }
+  .viewer {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #F2F2F5;
+  }
+  .viewer::backdrop { background: rgba(8, 8, 10, .9); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  .viewer[open] { display: grid; grid-template-rows: 1fr auto; animation: viewer-in .35s var(--ease); }
+  @keyframes viewer-in { from { opacity: 0; transform: scale(.985); } }
+  .viewer figure { margin: 0; min-height: 0; display: grid; place-items: center; padding: 64px 72px 0; }
+  .viewer img { max-width: 100%; max-height: calc(100dvh - 160px); object-fit: contain; border-radius: 10px; transition: opacity .25s ease; }
+  .viewer img.loading { opacity: .35; }
+  .viewer-bar { display: flex; align-items: center; justify-content: center; gap: 18px; padding: 18px 16px 26px; font-size: 0.82rem; }
+  .viewer-bar .where { min-width: 13ch; text-align: center; color: #C9CAD1; font-variant-numeric: tabular-nums; }
+  .viewer button {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .06);
+    color: inherit;
+    cursor: pointer;
+    transition: background-color .2s ease;
+  }
+  .viewer button:hover { background: rgba(255, 255, 255, .14); }
+  .viewer .close { position: absolute; top: 14px; right: 14px; }
+
+  @media (max-width: 560px) {
+    .viewer figure { padding: 60px 12px 0; }
+  }
 
   /* ---------- footer ---------- */
-  .footer {
-    margin-top: 56px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
+  .foot {
+    margin-top: 112px;
+    padding: 24px 0 64px;
+    border-top: 1px solid var(--line);
     display: flex;
-    align-items: center;
     justify-content: space-between;
     gap: 16px;
     flex-wrap: wrap;
+    font-size: 0.78rem;
+    color: var(--faint);
   }
-  .download-btn {
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    color: var(--ink);
-    background: var(--panel);
-    border: 1px solid var(--border);
-    padding: 9px 16px;
-    border-radius: 7px;
-    text-decoration: none;
-    transition: border-color 0.15s ease, transform 0.15s ease;
-  }
-  .download-btn:hover {
-    border-color: var(--green);
-    text-decoration: none;
-    transform: translateY(-1px);
-  }
-  .footnote { color: var(--ink-faint); font-size: 0.78rem; margin: 0; }
+  .foot a { color: var(--soft); }
 
-  /* ---------- responsive ---------- */
-  @media (max-width: 620px) {
-    .wrap { padding: 32px 18px 64px; }
-    .sysinfo { padding: 22px 20px; }
-    .meta { grid-template-columns: 1fr; }
-    .two-col { grid-template-columns: 1fr; gap: 28px; }
-    .skill-group { grid-template-columns: 1fr; gap: 6px; }
-    .job-head { flex-wrap: wrap; }
-    .job-dates { margin-left: 20px; }
-    .block { margin-top: 36px; }
+  /* ================= reveals (each section moves its own way) ================= */
+  [data-reveal], [data-reveal-child] { transition: opacity .9s var(--ease), transform .9s var(--ease), filter .9s var(--ease), clip-path 1s var(--ease); }
+  [data-reveal-child] { transition-delay: calc(var(--i, 0) * 70ms); }
+  .js [data-reveal="focus"]:not(.is-in) { opacity: 0; filter: blur(8px); transform: translateY(6px); }
+  .js [data-reveal="wipe"]:not(.is-in) { opacity: 0; clip-path: inset(0 0 100% 0); }
+  .js [data-reveal="wipe"] { clip-path: inset(0 0 0 0); }
+  .js [data-reveal="rise"]:not(.is-in) [data-reveal-child] { opacity: 0; transform: translateY(10px); }
+  .js [data-reveal="settle"]:not(.is-in) { opacity: 0; transform: scale(.985); }
+  .js [data-reveal="sketch"]:not(.is-in) [data-reveal-child] { opacity: 0; transform: translateY(6px) scale(.97); }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition-duration: 0s !important; transition-delay: 0s !important; }
+    .pulse::after { animation: none; }
   }
 
-  @media (max-width: 400px) {
-    .wrap { padding: 24px 14px 56px; }
-    .sysinfo { padding: 18px 16px; border-radius: 8px; }
-    .sysinfo-top { margin-bottom: 14px; }
-    .theme-toggle { width: 28px; height: 28px; }
-    .job-title-group h3 { font-size: 1rem; }
-    .tag { font-size: 0.73rem; padding: 3px 8px; }
-    .footer { justify-content: center; text-align: center; }
+  /* ================= compact (tablet / phone) ================= */
+  @media (max-width: 900px) {
+    .page { display: flex; flex-direction: column; }
+    .aside { display: contents; }
+    .aside::before { display: none; }
+
+    .id-block {
+      order: 1;
+      position: relative;
+      isolation: isolate;
+      padding: 28px 24px 0;
+      background: var(--aside-bg);
+    }
+    .id-block::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-image: radial-gradient(var(--dot) 1px, transparent 1.3px);
+      background-size: 16px 16px;
+      -webkit-mask-image: linear-gradient(to bottom, #000, transparent);
+              mask-image: linear-gradient(to bottom, #000, transparent);
+    }
+    .avatar { width: 64px; height: 64px; font-size: 1.15rem; }
+    .name { margin-top: 18px; font-size: 1.4rem; }
+    .intro { max-width: 52ch; }
+
+    .aside-foot {
+      order: 2;
+      margin: 0;
+      padding: 20px 24px 22px;
+      background: var(--aside-bg);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 20px;
+    }
+    .contacts { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+    .contacts .full { display: none; }
+    .contacts .short { display: inline; }
+    .resume-btn { margin: 0 0 0 auto; padding: 9px 16px; }
+
+    .spy {
+      order: 3;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      margin: 0;
+      padding: 10px 16px;
+      background: color-mix(in oklab, var(--bg) 88%, transparent);
+      -webkit-backdrop-filter: blur(12px);
+              backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .spy::-webkit-scrollbar { display: none; }
+    .spy ul { display: flex; gap: 4px; width: max-content; }
+    .spy a { padding: 7px 14px 7px 28px; border-radius: 999px; white-space: nowrap; font-size: 0.82rem; }
+    .spy-ind { border-radius: 999px; }
+    .spy-ind::before { left: 12px; }
+    .spy .out { margin: 0; padding: 0; border: 0; }
+    .spy .out a { padding-left: 14px; }
+
+    .main { order: 4; }
+    .inner { margin: 0 auto; padding: 48px 24px 0; }
+    section[data-spy] { padding-top: 80px; scroll-margin-top: 58px; }
+  }
+
+  @media (max-width: 560px) {
+    .lead { font-size: 1.04rem; }
+    .role-item { grid-template-columns: minmax(0, 1fr); }
+    .rail { grid-column: 1; grid-row: auto; justify-self: start; text-align: left; padding-top: 6px; }
+    .gist { margin-top: 8px; }
+    .kit-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    .creds li { grid-template-columns: minmax(0, 1fr); }
+    .creds .by { text-align: left; }
+    .interests { gap: 18px 10px; }
+    .shot { aspect-ratio: 4 / 5; }
+    .resume-btn { margin-left: 0; width: 100%; }
+    .inner { padding-left: 20px; padding-right: 20px; }
+    .id-block, .aside-foot { padding-left: 20px; padding-right: 20px; }
   }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="page">
 
-  <header class="sysinfo fade-in" style="animation-delay: 0s;">
-    <div class="sysinfo-top">
-      <div class="status-line">
-        <span class="status-dot active" aria-hidden="true"></span>
-        <span class="mono label">STATUS: OPEN TO OPPORTUNITIES</span>
+  <aside class="aside" aria-label="About Jiho">
+    <div class="id-block">
+      <div class="id-top">
+        <div class="avatar"><img src="images/headshot.webp" alt="Jiho John Bae" width="320" height="320"></div>
+        <button type="button" class="theme-btn" data-theme-toggle aria-label="Switch to light mode">
+          <svg class="ico sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/>
+          </svg>
+          <svg class="ico moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.5 14.2A8.5 8.5 0 1 1 9.8 3.5a6.8 6.8 0 0 0 10.7 10.7z"/>
+          </svg>
+        </button>
       </div>
-      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">
-        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="4"></circle>
-          <line x1="12" y1="2" x2="12" y2="4"></line>
-          <line x1="12" y1="20" x2="12" y2="22"></line>
-          <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line>
-          <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line>
-          <line x1="2" y1="12" x2="4" y2="12"></line>
-          <line x1="20" y1="12" x2="22" y2="12"></line>
-          <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line>
-          <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line>
-        </svg>
-        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-      </button>
+      <h1 class="name">Jiho John Bae</h1>
+      <p class="role">IT Systems Administrator</p>
+      <span class="badge"><span class="pulse" aria-hidden="true"></span>Open to opportunities</span>
+      <p class="intro">Based in San Francisco, CA.<br>An IT professional who's eager to learn about AI.</p>
     </div>
-    <h1>Jiho John Bae</h1>
-    <p class="role">IT Systems Administrator</p>
-    <dl class="meta">
-      <div class="meta-row">
-        <dt>location</dt><dd>Torrance, CA</dd>
-      </div>
-      <div class="meta-row">
-        <dt>email</dt><dd><a href="mailto:john21225@gmail.com">john21225@gmail.com</a></dd>
-      </div>
-      <div class="meta-row">
-        <dt>phone</dt><dd><a href="tel:+13104041276">(310) 404-1276</a></dd>
-      </div>
-      <div class="meta-row">
-        <dt>github</dt><dd><a href="https://github.com/BonkHo" target="_blank" rel="noopener">github.com/BonkHo</a></dd>
-      </div>
-    </dl>
-  </header>
 
-  <section class="block fade-in" style="animation-delay: 0.08s;">
-    <h2 class="section-label">// summary</h2>
-    <p class="summary-text">IT Systems Administrator with 4+ years supporting users and infrastructure. Experienced in cloud identity management (Entra ID, Intune MDM), security operations, and enterprise automation using Microsoft Power Platform. CompTIA Security+ certified and actively pursuing a Microsoft AZ-104 certification.</p>
-  </section>
-
-  <section class="block fade-in" style="animation-delay: 0.14s;">
-    <h2 class="section-label">// work_experience</h2>
-    <ul class="job-list">
-
-      <li class="job">
-        <div class="job-head">
-          <span class="status-dot active" aria-hidden="true"></span>
-          <div class="job-title-group">
-            <h3>IT Systems Administrator</h3>
-            <p>C3 Systems and Security</p>
-          </div>
-          <div class="job-dates mono">
-            2025.05 — present
-            <span class="job-status-word active">active</span>
-          </div>
-        </div>
-        <ul class="job-bullets">
-          <li>Provided Tier 1–2 help desk support ranging from hardware, software, and vendor support.</li>
-          <li>Managed Microsoft 365 environments using Exchange, Teams, SharePoint, Intune, Entra ID.</li>
-          <li>Configured and managed networking equipment such as SonicWall firewalls and UniFi network stacks.</li>
-          <li>Performed compromised account remediation, system vulnerability checks, and incident response.</li>
-          <li>Scoped and worked on projects including server migrations, mail migrations, and network refreshes.</li>
-          <li>Created and maintained technical documentation in efforts to standardize work processes.</li>
-        </ul>
-      </li>
-
-      <li class="job">
-        <div class="job-head">
-          <span class="status-dot archived" aria-hidden="true"></span>
-          <div class="job-title-group">
-            <h3>Server Administrator</h3>
-            <p>Rocket Lab</p>
-          </div>
-          <div class="job-dates mono">
-            2024.05 — 2025.05
-            <span class="job-status-word archived">archived</span>
-          </div>
-        </div>
-        <ul class="job-bullets">
-          <li>Maintained and monitored Microsoft, SQL, and Linux servers used by engineers for launch operations.</li>
-          <li>Created a patch management schedule for all servers ensuring compliance and security.</li>
-          <li>Conducted audits via vSphere to identify and remediate vulnerable systems to reduce risk.</li>
-          <li>Reviewed emerging cyberthreats and KB articles to ensure good cybersecurity practices.</li>
-          <li>Created documentation for patch processes across Windows, SQL, and Linux OS environments.</li>
-        </ul>
-      </li>
-
-      <li class="job">
-        <div class="job-head">
-          <span class="status-dot archived" aria-hidden="true"></span>
-          <div class="job-title-group">
-            <h3>IT Systems Administrator &amp; Automation Specialist</h3>
-            <p>Honu Services Inc.</p>
-          </div>
-          <div class="job-dates mono">
-            2022.01 — 2023.10
-            <span class="job-status-word archived">archived</span>
-          </div>
-        </div>
-        <ul class="job-bullets">
-          <li>Provided help desk support for basic hardware and software troubleshooting.</li>
-          <li>Managed user accounts, mailboxes, groups, and policies in the Microsoft 365 environment.</li>
-          <li>Managed user access and group policies for AWS EC2 instances.</li>
-          <li>Designed and deployed automated workflows across all departments using Microsoft Power Platform.</li>
-          <li>Created and revised technical documentation for work processes and automations.</li>
-        </ul>
-      </li>
-
-    </ul>
-  </section>
-
-  <section class="block fade-in" style="animation-delay: 0.2s;">
-    <h2 class="section-label">// technical_skills</h2>
-    <div class="skill-groups">
-      <div class="skill-group">
-        <span class="skill-key mono">cloud</span>
-        <div class="tags">
-          <span class="tag">AWS</span>
-          <span class="tag">Google Cloud Platform</span>
-          <span class="tag">Microsoft Azure</span>
-          <span class="tag">Microsoft 365</span>
-          <span class="tag">vSphere</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <span class="skill-key mono">networking</span>
-        <div class="tags">
-          <span class="tag">SonicWall</span>
-          <span class="tag">UniFi</span>
-          <span class="tag">TCP/IP</span>
-          <span class="tag">DNS</span>
-          <span class="tag">DHCP</span>
-          <span class="tag">VPN</span>
-          <span class="tag">Subnetting</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <span class="skill-key mono">automation</span>
-        <div class="tags">
-          <span class="tag">Power Automate</span>
-          <span class="tag">Power Apps</span>
-          <span class="tag">PowerShell</span>
-          <span class="tag">Python</span>
-          <span class="tag">JavaScript</span>
-          <span class="tag">Claude</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <span class="skill-key mono">security</span>
-        <div class="tags">
-          <span class="tag">Incident Response</span>
-          <span class="tag">Patch Management</span>
-          <span class="tag">Vulnerability Audits</span>
-          <span class="tag">SIEM</span>
-          <span class="tag">Compliance</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <span class="skill-key mono">systems</span>
-        <div class="tags">
-          <span class="tag">Windows Server</span>
-          <span class="tag">Linux</span>
-          <span class="tag">SQL Server</span>
-          <span class="tag">macOS</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="block two-col fade-in" style="animation-delay: 0.26s;">
-    <div>
-      <h2 class="section-label">// certifications</h2>
-      <ul class="cred-list">
-        <li><span class="check">✓</span><span>CompTIA Security+ <span class="cred-issuer">— CompTIA</span></span></li>
-        <li><span class="check">✓</span><span>Google Cybersecurity Certificate <span class="cred-issuer">— Google</span></span></li>
+    <nav class="spy" aria-label="Sections">
+      <ul>
+        <li aria-hidden="true" style="display:contents"><span class="spy-ind"></span></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#toolkit">Toolkit</a></li>
+        <li><a href="#credentials">Credentials</a></li>
+        <li><a href="#interests">Interests</a></li>
+        <li class="out">
+          <a href="Jiho_Bae_Resume.pdf" target="_blank" rel="noopener">
+            Resume
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16L16 8M9.5 8H16v6.5"/></svg>
+          </a>
+        </li>
       </ul>
-    </div>
-    <div>
-      <h2 class="section-label">// education</h2>
-      <ul class="cred-list">
-        <li><span class="check">✓</span><span>B.S. Computer Information Systems <span class="cred-issuer">— Cal Poly Pomona</span></span></li>
+    </nav>
+
+    <div class="aside-foot">
+      <ul class="contacts">
+        <li>
+          <a href="mailto:john21225@gmail.com">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.8 6.5l8.2 6 8.2-6"/></svg>
+            <span class="full">john21225@gmail.com</span><span class="short">Email</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.linkedin.com/in/jihobae" target="_blank" rel="noopener">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3.5"/><path d="M8 10.5V16.5M8 7.6v.1M11.5 16.5v-6M11.5 13.2c0-1.6 1.1-2.7 2.5-2.7s2.2 1 2.2 2.6v3.4"/></svg>
+            <span class="full">linkedin.com/in/jihobae</span><span class="short">LinkedIn</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/BonkHo" target="_blank" rel="noopener">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.3 1.4-4.3-2.2-6-2.7M15 21v-3.4c0-1 .1-1.5-.5-2.1 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.3 4.3 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2.1V21"/></svg>
+            <span class="full">github.com/BonkHo</span><span class="short">GitHub</span>
+          </a>
+        </li>
       </ul>
+      <a class="resume-btn" href="Jiho_Bae_Resume.pdf" download>
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>
+        Resume
+      </a>
     </div>
-  </section>
+  </aside>
 
-  <footer class="footer fade-in" style="animation-delay: 0.32s;">
-    <a class="download-btn" href="Jiho_Bae_Resume.pdf" download>↓ download_resume.pdf</a>
-    <p class="mono footnote">last updated 2026.08</p>
-  </footer>
+  <main class="main" id="top">
+    <div class="inner">
 
+      <p class="lead" data-reveal="focus"><strong>IT Systems Administrator</strong> with 4+ years supporting users and infrastructure. Experienced in cloud identity management, security operations, and enterprise automation. Microsoft Azure Administrator (AZ-104) and CompTIA Security+ certified.</p>
+
+      <section id="experience" data-spy aria-labelledby="h-exp">
+        <h2 class="sec-h" id="h-exp">Experience</h2>
+        <ol class="roles">
+          <li class="role-item" data-reveal="wipe">
+            <div class="role-head">
+              <h3>IT Systems Administrator</h3>
+              <p>C3 Systems and Security</p>
+            </div>
+            <div class="rail">May 2025 – <span class="live">Present</span></div>
+            <p class="gist">Tier 1–2 support, Microsoft 365 and Entra ID administration, SonicWall and UniFi networking, and incident response.</p>
+          </li>
+          <li class="role-item" data-reveal="wipe">
+            <div class="role-head">
+              <h3>Server Administrator</h3>
+              <p>Rocket Lab</p>
+            </div>
+            <div class="rail">May 2024 – May 2025</div>
+            <p class="gist">Maintained the Windows, SQL, and Linux servers engineers used for launch operations, including patching and vulnerability audits.</p>
+          </li>
+          <li class="role-item" data-reveal="wipe">
+            <div class="role-head">
+              <h3>IT Systems Administrator &amp; Automation Specialist</h3>
+              <p>Honu Services Inc.</p>
+            </div>
+            <div class="rail">Jan 2022 – Oct 2023</div>
+            <p class="gist">Help desk and Microsoft 365 administration, plus Power Platform automations for every department.</p>
+          </li>
+        </ol>
+        <a class="more" href="Jiho_Bae_Resume.pdf" target="_blank" rel="noopener">
+          Full resume
+          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16L16 8M9.5 8H16v6.5"/></svg>
+        </a>
+      </section>
+
+      <section id="toolkit" data-spy aria-labelledby="h-kit">
+        <h2 class="sec-h" id="h-kit">Toolkit</h2>
+        <dl class="kit" data-reveal="rise">
+          <div class="kit-row" data-reveal-child>
+            <dt>Cloud</dt>
+            <dd><ul><li>Amazon Web Services</li><li>Google Cloud Platform</li><li>Microsoft Azure</li><li>Microsoft 365</li><li>vSphere</li></ul></dd>
+          </div>
+          <div class="kit-row" data-reveal-child>
+            <dt>Networking</dt>
+            <dd><ul><li>SonicWall</li><li>UniFi</li><li>TCP/IP</li><li>DNS</li><li>DHCP</li><li>VPN</li><li>Subnetting</li></ul></dd>
+          </div>
+          <div class="kit-row" data-reveal-child>
+            <dt>Automation &amp; Tools</dt>
+            <dd><ul><li>Power Automate</li><li>Power Apps</li><li>PowerShell</li><li>Python</li><li>JavaScript</li><li>Claude</li></ul></dd>
+          </div>
+          <div class="kit-row" data-reveal-child>
+            <dt>Security</dt>
+            <dd><ul><li>Incident Response</li><li>Patch Management</li><li>Vulnerability Audits</li><li>SIEM</li><li>Compliance</li></ul></dd>
+          </div>
+          <div class="kit-row" data-reveal-child>
+            <dt>Systems</dt>
+            <dd><ul><li>Windows Server</li><li>Linux</li><li>SQL Server</li><li>macOS</li></ul></dd>
+          </div>
+        </dl>
+      </section>
+
+      <section id="credentials" data-spy aria-labelledby="h-cred">
+        <h2 class="sec-h" id="h-cred">Credentials</h2>
+        <div data-reveal="settle">
+          <div class="cred-group">
+            <h3 class="cred-h">Certifications</h3>
+            <ul class="creds">
+              <li><span>Microsoft Certified: Azure Administrator Associate (AZ-104)<span class="fresh">new</span></span><span class="by">Microsoft</span></li>
+              <li><span>CompTIA Security+</span><span class="by">CompTIA</span></li>
+              <li><span>Google Cybersecurity Certificate</span><span class="by">Google</span></li>
+            </ul>
+          </div>
+          <div class="cred-group">
+            <h3 class="cred-h">Education</h3>
+            <ul class="creds">
+              <li><span>B.S. Computer Information Systems</span><span class="by">Cal Poly Pomona</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="interests" data-spy aria-labelledby="h-int">
+        <h2 class="sec-h" id="h-int">Interests</h2>
+        <p class="sec-note">The parts that don't fit on a resume.</p>
+        <!-- photo sets live in GALLERIES (script below) -->
+        <ul class="interests" data-reveal="sketch">
+          <li class="interest" data-reveal-child>
+            <button type="button" class="shot" data-gallery="climbing" aria-label="Rock climbing: view 5 photos">
+              <img src="images/interests/climbing-1-sm.webp" alt="" width="640" height="800" loading="lazy" style="object-position: 50% 28%">
+              <span class="count" aria-hidden="true">5 photos</span>
+            </button>
+            <span class="cap">Rock climbing</span>
+          </li>
+          <li class="interest" data-reveal-child>
+            <button type="button" class="shot" data-gallery="travel" aria-label="Traveling: view 8 photos">
+              <img src="images/interests/travel-1-sm.webp" alt="" width="600" height="800" loading="lazy" style="object-position: 50% 40%">
+              <span class="count" aria-hidden="true">8 photos</span>
+            </button>
+            <span class="cap">Traveling</span>
+          </li>
+        </ul>
+        <ul class="also" data-reveal="sketch">
+          <li data-reveal-child>Food</li>
+          <li data-reveal-child>Cooking</li>
+          <li data-reveal-child>Technology</li>
+        </ul>
+      </section>
+
+      <footer class="foot">
+        <span>Jiho John Bae · San Francisco, CA</span>
+        <span>last updated 2026.10 · <a href="#top">back to top</a></span>
+      </footer>
+
+    </div>
+  </main>
 </div>
+
+<dialog class="viewer" aria-label="Photos">
+  <button type="button" class="close" data-close aria-label="Close photos">
+    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <figure><img src="images/interests/climbing-1-sm.webp" alt=""></figure>
+  <div class="viewer-bar">
+    <button type="button" data-step="-1" aria-label="Previous photo">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6l-6 6 6 6"/></svg>
+    </button>
+    <span class="where" aria-live="polite"></span>
+    <button type="button" data-step="1" aria-label="Next photo">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+</dialog>
+
 <script>
   (function () {
-    var btn = document.getElementById('theme-toggle');
-    if (!btn) return;
     var root = document.documentElement;
-    function sync() {
-      btn.setAttribute('aria-pressed', root.getAttribute('data-theme') === 'dark' ? 'true' : 'false');
+    var meta = document.querySelector('meta[name="theme-color"]');
+
+    // ---- theme toggle ----
+    var btn = document.querySelector('[data-theme-toggle]');
+    function syncTheme() {
+      var dark = root.getAttribute('data-theme') === 'dark';
+      btn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+      meta.setAttribute('content', dark ? '#121316' : '#F6F6F3');
     }
-    sync();
     btn.addEventListener('click', function () {
       var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       root.setAttribute('data-theme', next);
       try { localStorage.setItem('theme', next); } catch (e) {}
-      sync();
+      syncTheme();
+    });
+    syncTheme();
+
+    // ---- scroll reveals ----
+    // Position check instead of IntersectionObserver: IO ignores elements whose own clip-path
+    // hides them completely (the "wipe" reveals), so those would never appear.
+    var els = document.querySelectorAll('[data-reveal]');
+    els.forEach(function (el) {
+      el.querySelectorAll('[data-reveal-child]').forEach(function (c, i) { c.style.setProperty('--i', i); });
+    });
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.forEach(function (el) { el.classList.add('is-in'); });
+    } else {
+      var pending = Array.prototype.slice.call(els);
+      var queued = false;
+      var check = function () {
+        queued = false;
+        var vh = window.innerHeight;
+        var atBottom = window.scrollY + vh >= root.scrollHeight - 4;
+        pending = pending.filter(function (el) {
+          var r = el.getBoundingClientRect();
+          if (atBottom || (r.top < vh * 0.92 && r.bottom > 0)) { el.classList.add('is-in'); return false; }
+          return true;
+        });
+        if (!pending.length) { window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onScroll); }
+      };
+      var onScroll = function () { if (!queued) { queued = true; requestAnimationFrame(check); } };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      check();
+    }
+
+    // ---- scroll-spy: one indicator glides to the active nav item; the active section's heading rule sweeps in ----
+    var nav = document.querySelector('.spy');
+    var ind = nav.querySelector('.spy-ind');
+    var links = Array.prototype.slice.call(nav.querySelectorAll('a[href^="#"]'));
+    var sections = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); });
+    var active = null;
+
+    function place() {
+      var a = active && links[sections.indexOf(active)];
+      if (!a) { ind.classList.remove('on'); return; }
+      var li = a.parentElement;
+      ind.style.width = li.offsetWidth + 'px';
+      ind.style.height = li.offsetHeight + 'px';
+      ind.style.transform = 'translate(' + li.offsetLeft + 'px,' + li.offsetTop + 'px)';
+      ind.classList.add('on');
+      // keep the active chip in view on the compact horizontal nav
+      if (nav.scrollWidth > nav.clientWidth) {
+        var target = li.offsetLeft - (nav.clientWidth - li.offsetWidth) / 2;
+        nav.scrollTo({ left: Math.max(0, target), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      }
+    }
+
+    function setActive(sec) {
+      if (sec === active) return;
+      if (active) active.classList.remove('is-active');
+      active = sec;
+      links.forEach(function (a, i) { a.setAttribute('aria-current', sections[i] === sec ? 'true' : 'false'); });
+      if (sec) sec.classList.add('is-active');
+      place();
+    }
+
+    // A thin band ~35% down the viewport: whichever section crosses it is "current".
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) setActive(en.target); });
+    }, { rootMargin: '-35% 0px -64% 0px' });
+    sections.forEach(function (s) { io.observe(s); });
+
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        ticking = false;
+        // above the first section: nothing is current
+        if (sections[0].getBoundingClientRect().top > window.innerHeight * 0.35) setActive(null);
+        // at the very bottom the last (short) section can't reach the band
+        else if (window.innerHeight + window.scrollY >= root.scrollHeight - 4) setActive(sections[sections.length - 1]);
+      });
+    }, { passive: true });
+    window.addEventListener('resize', place);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+
+    // ---- photo viewer: each interest tile opens its own set ----
+    var GALLERIES = {
+      climbing: { title: 'Rock climbing', photos: [
+        'Sitting on top of a tall pointed granite boulder against a blue sky',
+        'Bouldering on a sandstone face, seen from above',
+        'Crouched at the base of a boulder in climbing shoes, under the trees',
+        'One arm raised with a chalk bag on, rocky hills behind',
+        'Two climbers peeking over the top of a granite boulder'
+      ] },
+      travel: { title: 'Traveling', photos: [
+        'Rows of colorful paper lanterns strung over a street',
+        'Heungnyemun Gate at Gyeongbokgung Palace in Seoul',
+        'In front of a painted Korean pavilion beside a pond',
+        'Next to a stone bear sculpture among autumn leaves',
+        'A bronze bell hanging under banyan trees',
+        'A round table set with rooster-pattern bowls beside a harbor full of boats',
+        'Tangerines and persimmons for sale outside a corner shop in Korea',
+        'A seafood seller cleaning fish on a small boat, seen from above'
+      ] }
+    };
+    var viewer = document.querySelector('.viewer');
+    var vImg = viewer.querySelector('img');
+    var vWhere = viewer.querySelector('.where');
+    var set = null, idx = 0, opener = null;
+
+    function src(key, i) { return 'images/interests/' + key + '-' + (i + 1) + '.webp'; }
+    function show(i) {
+      var g = GALLERIES[set];
+      idx = (i + g.photos.length) % g.photos.length;
+      vImg.classList.add('loading');
+      vImg.onload = function () { vImg.classList.remove('loading'); };
+      vImg.src = src(set, idx);
+      vImg.alt = g.photos[idx];
+      vWhere.textContent = g.title + ' · ' + (idx + 1) + ' / ' + g.photos.length;
+      // warm the next one so stepping through feels instant
+      new Image().src = src(set, (idx + 1) % g.photos.length);
+    }
+    document.querySelectorAll('[data-gallery]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        set = b.getAttribute('data-gallery');
+        opener = b;
+        show(0);
+        viewer.showModal();
+      });
+    });
+    viewer.addEventListener('click', function (e) {
+      var step = e.target.closest('[data-step]');
+      if (step) return show(idx + +step.getAttribute('data-step'));
+      // clicking the dark area around the photo closes, like most viewers
+      if (e.target.closest('[data-close]') || e.target === viewer || e.target.tagName === 'FIGURE') viewer.close();
+    });
+    viewer.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') show(idx + 1);
+      if (e.key === 'ArrowLeft') show(idx - 1);
+    });
+    viewer.addEventListener('close', function () { if (opener) opener.focus(); });
+    var touchX = null;
+    viewer.addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, { passive: true });
+    viewer.addEventListener('touchend', function (e) {
+      if (touchX === null) return;
+      var dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 40) show(idx + (dx < 0 ? 1 : -1));
+      touchX = null;
     });
   })();
 </script>
