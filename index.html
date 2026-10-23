@@ -42,11 +42,15 @@
     --line-strong: #353943;
     --dot: #343842;
     --raise: #1B1D22;
-    --glass-fill: linear-gradient(150deg, rgba(255,255,255,.075), rgba(255,255,255,.025) 55%, rgba(255,255,255,.04));
+    /* sheen over a smoky base: the base caps how bright a passing blob can make the panel, so secondary text stays legible */
+    --glass-fill: linear-gradient(150deg, rgba(255,255,255,.07), rgba(255,255,255,.02) 55%, rgba(255,255,255,.035)), linear-gradient(rgba(12,13,18,.34), rgba(12,13,18,.34));
     --glass-rim: linear-gradient(140deg, rgba(255,255,255,.30), rgba(255,255,255,.06) 32%, rgba(255,255,255,.02) 62%, rgba(167,139,250,.30));
     --glass-shadow: 0 30px 60px -36px rgba(0,0,0,.85), 0 2px 6px -2px rgba(0,0,0,.4);
     --glass-line: rgba(255,255,255,.09);
     --glass-line-strong: rgba(255,255,255,.16);
+    --glass-soft: #C6C9D8;
+    --glass-faint: #A3A7BC;
+    --glass-accent: #B7A2FB;
     --blob-1: rgba(167, 139, 250, .30);
     --blob-2: rgba(96, 165, 250, .20);
     --blob-3: rgba(129, 140, 248, .22);
@@ -68,6 +72,9 @@
     --glass-shadow: 0 30px 60px -38px rgba(40,30,80,.35), 0 2px 6px -2px rgba(40,30,80,.08);
     --glass-line: rgba(21,23,26,.10);
     --glass-line-strong: rgba(21,23,26,.20);
+    --glass-soft: #3D414C;
+    --glass-faint: #50556A;
+    --glass-accent: #6D28D9;
     --blob-1: rgba(124, 58, 237, .20);
     --blob-2: rgba(59, 130, 246, .16);
     --blob-3: rgba(167, 139, 250, .22);
@@ -324,6 +331,10 @@
     /* opaque dividers vanish where the glass is lighter; translucent ones track the tint */
     --line: var(--glass-line);
     --line-strong: var(--glass-line-strong);
+    /* secondary text is lifted and cool-tinted on glass so it holds contrast over the colour field */
+    --soft: var(--glass-soft);
+    --faint: var(--glass-faint);
+    --accent: var(--glass-accent);
   }
   .lead + section[data-spy] { margin-top: 88px; }
   /* light-catching rim: a 1px gradient border cut out with a mask; the reading section's rim warms to the accent */
