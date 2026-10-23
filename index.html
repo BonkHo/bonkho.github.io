@@ -42,6 +42,14 @@
     --line-strong: #353943;
     --dot: #343842;
     --raise: #1B1D22;
+    --glass-fill: linear-gradient(150deg, rgba(255,255,255,.075), rgba(255,255,255,.025) 55%, rgba(255,255,255,.04));
+    --glass-rim: linear-gradient(140deg, rgba(255,255,255,.30), rgba(255,255,255,.06) 32%, rgba(255,255,255,.02) 62%, rgba(167,139,250,.30));
+    --glass-shadow: 0 30px 60px -36px rgba(0,0,0,.85), 0 2px 6px -2px rgba(0,0,0,.4);
+    --glass-line: rgba(255,255,255,.09);
+    --glass-line-strong: rgba(255,255,255,.16);
+    --blob-1: rgba(167, 139, 250, .30);
+    --blob-2: rgba(96, 165, 250, .20);
+    --blob-3: rgba(129, 140, 248, .22);
     color-scheme: dark;
   }
   :root[data-theme="light"] {
@@ -55,6 +63,14 @@
     --line-strong: #C6C6BE;
     --dot: #C9C9C1;
     --raise: #FFFFFF;
+    --glass-fill: linear-gradient(150deg, rgba(255,255,255,.72), rgba(255,255,255,.42) 55%, rgba(255,255,255,.55));
+    --glass-rim: linear-gradient(140deg, rgba(255,255,255,1), rgba(255,255,255,.5) 32%, rgba(21,23,26,.06) 62%, rgba(109,40,217,.22));
+    --glass-shadow: 0 30px 60px -38px rgba(40,30,80,.35), 0 2px 6px -2px rgba(40,30,80,.08);
+    --glass-line: rgba(21,23,26,.10);
+    --glass-line-strong: rgba(21,23,26,.20);
+    --blob-1: rgba(124, 58, 237, .20);
+    --blob-2: rgba(59, 130, 246, .16);
+    --blob-3: rgba(167, 139, 250, .22);
     color-scheme: light;
   }
 
@@ -270,7 +286,68 @@
   }
   .lead strong { color: var(--ink); font-weight: 600; }
 
-  section[data-spy] { padding-top: 104px; scroll-margin-top: 0; }
+  /* ---------- liquid glass ---------- */
+  /* fixed colour field behind the reading pane: the panels scroll over it, so the glass picks up shifting light */
+  .glow {
+    position: fixed;
+    inset: 0 0 0 var(--aside-w);
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .glow span {
+    position: absolute;
+    width: 62vmax;
+    height: 62vmax;
+    border-radius: 50%;
+    will-change: transform;
+  }
+  .glow span:nth-child(1) { top: -24vmax; right: -18vmax; background: radial-gradient(closest-side, var(--blob-1), transparent); animation: drift-a 34s ease-in-out infinite alternate; }
+  .glow span:nth-child(2) { top: 30vh; left: -26vmax; background: radial-gradient(closest-side, var(--blob-2), transparent); animation: drift-b 41s ease-in-out infinite alternate; }
+  .glow span:nth-child(3) { bottom: -30vmax; right: 4vw; background: radial-gradient(closest-side, var(--blob-3), transparent); animation: drift-c 29s ease-in-out infinite alternate; }
+  @keyframes drift-a { to { transform: translate(-14vmax, 18vmax) scale(1.12); } }
+  @keyframes drift-b { to { transform: translate(18vmax, -10vmax) scale(.9); } }
+  @keyframes drift-c { to { transform: translate(-20vmax, -14vmax) scale(1.08); } }
+
+  section[data-spy] {
+    position: relative;
+    margin-top: 64px;
+    padding: 40px 44px 44px;
+    border-radius: 24px;
+    background: var(--glass-fill);
+    -webkit-backdrop-filter: blur(24px) saturate(165%);
+            backdrop-filter: blur(24px) saturate(165%);
+    box-shadow: var(--glass-shadow);
+    scroll-margin-top: 32px;
+    /* opaque dividers vanish where the glass is lighter; translucent ones track the tint */
+    --line: var(--glass-line);
+    --line-strong: var(--glass-line-strong);
+  }
+  .lead + section[data-spy] { margin-top: 88px; }
+  /* light-catching rim: a 1px gradient border cut out with a mask; the reading section's rim warms to the accent */
+  section[data-spy]::before,
+  section[data-spy]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask-composite: exclude;
+    pointer-events: none;
+  }
+  section[data-spy]::before { background: var(--glass-rim); }
+  section[data-spy]::after {
+    background: linear-gradient(140deg, color-mix(in oklab, var(--accent) 80%, transparent), transparent 45%, transparent 70%, color-mix(in oklab, var(--accent) 45%, transparent));
+    opacity: 0;
+    transition: opacity .9s var(--ease);
+  }
+  section.is-active::after { opacity: 1; }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    section[data-spy] { background: color-mix(in oklab, var(--raise) 92%, transparent); }
+  }
   .sec-h {
     margin: 0 0 28px;
     font-size: 1.3rem;
@@ -378,7 +455,7 @@
     padding: 8px 16px;
     border-radius: 999px;
     font-size: 0.88rem;
-    background: var(--raise);
+    background: color-mix(in oklab, var(--raise) 55%, transparent);
     box-shadow: inset 0 0 0 1px var(--line-strong);
   }
   .interest:hover button.shot { box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 55%, transparent); }
@@ -453,6 +530,7 @@
     html { scroll-behavior: auto; }
     *, *::before, *::after { transition-duration: 0s !important; transition-delay: 0s !important; }
     .pulse::after { animation: none; }
+    .glow span { animation: none; }
   }
 
   /* ================= compact (tablet / phone) ================= */
@@ -514,30 +592,13 @@
     .contacts .short { display: inline; }
     .resume-btn { margin: 0 0 0 auto; padding: 9px 16px; }
 
-    .spy {
-      order: 3;
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      margin: 0;
-      padding: 10px 16px;
-      background: color-mix(in oklab, var(--bg) 88%, transparent);
-      -webkit-backdrop-filter: blur(12px);
-              backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--line);
-      overflow-x: auto;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-    }
-    .spy::-webkit-scrollbar { display: none; }
-    .spy ul { display: flex; gap: 4px; width: max-content; }
-    .spy a { padding: 7px 14px 7px 28px; border-radius: 999px; white-space: nowrap; font-size: 0.82rem; }
-    .spy-ind { border-radius: 999px; }
-    .spy-ind::before { left: 12px; }
+    .spy { display: none; }
+    .glow { left: 0; }
 
     .main { order: 4; }
     .inner { margin: 0 auto; padding: 48px 24px 0; }
-    section[data-spy] { padding-top: 80px; scroll-margin-top: 58px; }
+    section[data-spy] { margin-top: 40px; padding: 32px 28px 34px; border-radius: 20px; }
+    .lead + section[data-spy] { margin-top: 56px; }
   }
 
   @media (max-width: 560px) {
@@ -551,12 +612,14 @@
     .interests { gap: 18px 10px; }
     .shot { aspect-ratio: 4 / 5; }
     .resume-btn { margin-left: 0; width: 100%; }
-    .inner { padding-left: 20px; padding-right: 20px; }
+    .inner { padding-left: 16px; padding-right: 16px; }
+    section[data-spy] { padding: 26px 20px 28px; }
     .id-block, .aside-foot { padding-left: 20px; padding-right: 20px; }
   }
 </style>
 </head>
 <body>
+<div class="glow" aria-hidden="true"><span></span><span></span><span></span></div>
 <div class="page">
 
   <aside class="aside" aria-label="About Jiho">
