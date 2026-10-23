@@ -36,7 +36,7 @@
     --ease: cubic-bezier(.16, 1, .3, 1);
     --aside-w: 368px;
     --bar-h: 32px;
-    /* the one colour on the page: status dots, the "new" tag and text selection, never text on white */
+    /* the one colour on the page: status dots and text selection, never text on white */
     --signal: #CDF46A;
   }
   :root[data-theme="light"] {
@@ -359,7 +359,6 @@
   .creds li:first-child { border-top: none; padding-top: 0; }
   .creds li:last-child { padding-bottom: 0; }
   .creds .by { color: var(--faint); font-size: 0.78rem; text-align: right; }
-  .creds .fresh { display: inline-block; margin-left: 10px; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #0A0A0A; background: var(--signal); vertical-align: 2px; }
 
   /* ---------- interests ---------- */
   .interests { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 12px; }
@@ -671,7 +670,7 @@
           <div class="cred-group">
             <h3 class="cred-h">Certifications</h3>
             <ul class="creds">
-              <li><span>Microsoft Certified: Azure Administrator Associate (AZ-104)<span class="fresh">new</span></span><span class="by">Microsoft</span></li>
+              <li><span>Microsoft Certified: Azure Administrator Associate (AZ-104)</span><span class="by">Microsoft</span></li>
               <li><span>CompTIA Security+</span><span class="by">CompTIA</span></li>
               <li><span>Google Cybersecurity Certificate</span><span class="by">Google</span></li>
             </ul>
