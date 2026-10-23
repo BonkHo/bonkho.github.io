@@ -87,6 +87,7 @@
     height: 100dvh;
     display: flex;
     flex-direction: column;
+    gap: 36px;
     padding: 40px 36px 32px;
     background: var(--aside-bg);
     border-right: 1px solid var(--line);
@@ -174,7 +175,8 @@
   .intro { margin: 18px 0 0; color: var(--soft); font-size: 0.85rem; line-height: 1.65; max-width: 34ch; }
 
   /* ---------- section nav + glide indicator ---------- */
-  .spy { margin-top: 40px; }
+  /* auto margins center the nav in the leftover height, so the space above and below it stays even */
+  .spy { margin-block: auto; }
   .spy ul { position: relative; list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
   .spy a {
     position: relative;
@@ -216,7 +218,6 @@
   .spy-ind.on { opacity: 1; }
 
   /* ---------- contact + resume ---------- */
-  .aside-foot { margin-top: auto; padding-top: 36px; }
   .contacts { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
   .contacts a {
     display: flex;
@@ -457,20 +458,18 @@
   /* ================= compact (tablet / phone) ================= */
   /* short desktop windows: tighten the sidebar so it fits the viewport without its own scroll */
   @media (min-width: 901px) and (max-height: 780px) {
-    .aside { padding-top: 28px; padding-bottom: 24px; }
+    .aside { gap: 22px; padding-top: 28px; padding-bottom: 24px; }
     .avatar { width: 64px; height: 64px; }
     .name { margin-top: 16px; }
     .badge { margin-top: 12px; }
     .intro { margin-top: 12px; }
-    .spy { margin-top: 24px; }
-    .aside-foot { padding-top: 20px; }
     .contacts a { padding: 3px 0; }
     .resume-btn { margin-top: 12px; }
   }
   /* too short to fit even when tight: let the sidebar scroll with the page instead of clipping */
   @media (min-width: 901px) and (max-height: 670px) {
     .aside { position: relative; height: auto; }
-    .aside-foot { margin-top: 0; }
+    .spy { margin-block: 0; }
   }
 
   @media (max-width: 900px) {
