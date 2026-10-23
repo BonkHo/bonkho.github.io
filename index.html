@@ -226,8 +226,6 @@
     background: var(--on-color);
   }
   .spy-ind.on { opacity: 1; }
-  /* tallies like "EXPERIENCE (3)": nudged up instead of vertical-align so they don't push the line height */
-  .n { position: relative; top: -0.55em; margin-left: 3px; font-size: 0.68em; font-weight: 400; letter-spacing: 0; color: inherit; }
 
   /* ---------- contact + resume ---------- */
   .contacts { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
@@ -650,7 +648,7 @@
 
       <p class="lead" data-reveal="focus"><strong>IT Systems Administrator</strong> with 4+ years supporting users and infrastructure. Experienced in cloud identity management, security operations, and enterprise automation. Microsoft Azure Administrator (AZ-104) and CompTIA Security+ certified.</p>
 
-      <section id="experience" data-spy data-count=".role-item" aria-labelledby="h-exp">
+      <section id="experience" data-spy aria-labelledby="h-exp">
         <h2 class="sec-h" id="h-exp">Experience</h2>
         <ol class="roles">
           <li class="role-item" data-reveal="wipe">
@@ -680,7 +678,7 @@
         </ol>
       </section>
 
-      <section id="toolkit" data-spy data-count=".kit li" aria-labelledby="h-kit">
+      <section id="toolkit" data-spy aria-labelledby="h-kit">
         <h2 class="sec-h" id="h-kit">Toolkit</h2>
         <dl class="kit" data-reveal="rise">
           <div class="kit-row" data-reveal-child>
@@ -706,7 +704,7 @@
         </dl>
       </section>
 
-      <section id="credentials" data-spy data-count=".creds li" aria-labelledby="h-cred">
+      <section id="credentials" data-spy aria-labelledby="h-cred">
         <h2 class="sec-h" id="h-cred">Credentials</h2>
         <div data-reveal="settle">
           <div class="cred-group">
@@ -726,7 +724,7 @@
         </div>
       </section>
 
-      <section id="interests" data-spy data-count=".interest, .also li" aria-labelledby="h-int">
+      <section id="interests" data-spy aria-labelledby="h-int">
         <h2 class="sec-h" id="h-int">Interests</h2>
         <p class="sec-note">The parts that don't fit on a resume.</p>
         <!-- photo sets live in GALLERIES (script below) -->
@@ -824,20 +822,6 @@
       window.addEventListener('resize', onScroll);
       check();
     }
-
-    // ---- tallies: "EXPERIENCE (3)" on each heading and nav link, counted from the page so they stay right ----
-    document.querySelectorAll('section[data-count]').forEach(function (sec) {
-      var n = sec.querySelectorAll(sec.getAttribute('data-count')).length;
-      var targets = [sec.querySelector('.sec-h'), document.querySelector('.spy a[href="#' + sec.id + '"]')];
-      targets.forEach(function (el) {
-        if (!el) return;
-        var sup = document.createElement('sup');
-        sup.className = 'n';
-        sup.setAttribute('aria-hidden', 'true');
-        sup.textContent = '(' + n + ')';
-        el.appendChild(sup);
-      });
-    });
 
     // ---- scroll-spy: one indicator glides to the active nav item; the active section's status dot lights up ----
     var nav = document.querySelector('.spy');
