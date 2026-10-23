@@ -62,7 +62,11 @@
     /* highlighter stroke behind the lead's job title */
     --mark: var(--lav);
     /* contour lines behind the reading pane */
-    --topo: #E4D8FA;
+    --topo: #ECE4FB;
+    /* glossy glass over the contour lines: a white sheen, a rim that catches light top-left and picks up lavender bottom-right */
+    --glass-fill: linear-gradient(150deg, rgba(255,255,255,.82), rgba(255,255,255,.56) 55%, rgba(255,255,255,.70));
+    --glass-rim: linear-gradient(140deg, rgba(255,255,255,1), rgba(255,255,255,.35) 35%, rgba(10,10,10,.08) 65%, rgba(185,150,240,.55));
+    --glass-shadow: 0 0 0 1px rgba(10,10,10,.04), 0 24px 48px -32px rgba(70,45,130,.30), 0 2px 6px -2px rgba(70,45,130,.08), inset 0 1px 0 rgba(255,255,255,.9);
     color-scheme: light;
   }
   :root[data-theme="dark"] {
@@ -82,7 +86,11 @@
     --aside-chip-hover: #272035;
     /* solid lavender behind light text would be unreadable, so the stroke is a deep violet in dark mode */
     --mark: #4A3A66;
-    --topo: #2A2140;
+    --topo: #211A30;
+    /* in dark mode the sheen sits on a smoky base so the panel stays darker than any line behind it */
+    --glass-fill: linear-gradient(150deg, rgba(255,255,255,.07), rgba(255,255,255,.02) 55%, rgba(255,255,255,.04)), linear-gradient(rgba(11,11,11,.55), rgba(11,11,11,.55));
+    --glass-rim: linear-gradient(140deg, rgba(255,255,255,.26), rgba(255,255,255,.05) 35%, rgba(255,255,255,.02) 65%, rgba(233,213,255,.30));
+    --glass-shadow: 0 24px 48px -30px rgba(0,0,0,.85), 0 2px 6px -2px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.06);
     color-scheme: dark;
   }
 
@@ -287,9 +295,10 @@
     margin: 0 auto;
     padding: 96px clamp(32px, 5vw, 72px) 0;
   }
+  /* the summary gets its own glass panel, untitled, so it reads cleanly over the contour lines */
   .lead {
-    max-width: 58ch;
     margin: 0;
+    padding: 32px 36px;
     font-size: 1.22rem;
     font-weight: 300;
     line-height: 1.7;
@@ -305,16 +314,37 @@
     padding: 0 2px;
   }
 
-  /* flat boxes ruled with a hairline, like product cards on a white shelf */
+  /* glossy glass: a translucent sheen that softly blurs the contour lines behind it, a light-catching rim and a soft drop shadow */
+  .glass {
+    position: relative;
+    border-radius: 12px;
+    background: var(--glass-fill);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+            backdrop-filter: blur(14px) saturate(150%);
+    box-shadow: var(--glass-shadow);
+  }
+  /* the rim is a 1px gradient border cut out with a mask, so it can fade from bright to lavender around the edge */
+  .glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: var(--glass-rim);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask-composite: exclude;
+    pointer-events: none;
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass { background: var(--bg); }
+  }
   section[data-spy] {
     margin-top: 24px;
     padding: 28px 36px 36px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    background: var(--bg);
     scroll-margin-top: calc(var(--bar-h) + 24px);
   }
-  .lead + section[data-spy] { margin-top: 80px; }
   .sec-h {
     position: relative;
     margin: 0 0 24px;
@@ -572,13 +602,13 @@
     .main { order: 4; }
     .inner { margin: 0 auto; padding: 48px 24px 0; }
     section[data-spy] { margin-top: 16px; padding: 24px 24px 28px; }
-    .lead + section[data-spy] { margin-top: 48px; }
+    .lead { padding: 24px; }
   }
 
   @media (max-width: 560px) {
     .bar { font-size: 0.7rem; }
     .bar .bar-role { display: none; }
-    .lead { font-size: 1.06rem; }
+    .lead { font-size: 1.06rem; padding: 20px 18px; }
     .role-item { grid-template-columns: minmax(0, 1fr); }
     .rail { grid-column: 1; grid-row: auto; justify-self: start; text-align: left; padding-top: 6px; }
     .gist { margin-top: 8px; }
@@ -661,9 +691,9 @@
   <main class="main" id="top">
     <div class="inner">
 
-      <p class="lead" data-reveal="focus"><strong>IT Systems Administrator</strong> with 4+ years supporting users and infrastructure. Experienced in cloud identity management, security operations, and enterprise automation. Microsoft Azure Administrator (AZ-104) and CompTIA Security+ certified.</p>
+      <p class="lead glass" data-reveal="focus"><strong>IT Systems Administrator</strong> with 4+ years supporting users and infrastructure. Experienced in cloud identity management, security operations, and enterprise automation. Microsoft Azure Administrator (AZ-104) and CompTIA Security+ certified.</p>
 
-      <section id="experience" data-spy aria-labelledby="h-exp">
+      <section id="experience" class="glass" data-spy aria-labelledby="h-exp">
         <h2 class="sec-h" id="h-exp">Experience</h2>
         <ol class="roles">
           <li class="role-item" data-reveal="wipe">
@@ -693,7 +723,7 @@
         </ol>
       </section>
 
-      <section id="toolkit" data-spy aria-labelledby="h-kit">
+      <section id="toolkit" class="glass" data-spy aria-labelledby="h-kit">
         <h2 class="sec-h" id="h-kit">Toolkit</h2>
         <dl class="kit" data-reveal="rise">
           <div class="kit-row" data-reveal-child>
@@ -719,7 +749,7 @@
         </dl>
       </section>
 
-      <section id="credentials" data-spy aria-labelledby="h-cred">
+      <section id="credentials" class="glass" data-spy aria-labelledby="h-cred">
         <h2 class="sec-h" id="h-cred">Credentials</h2>
         <div data-reveal="settle">
           <div class="cred-group">
@@ -739,7 +769,7 @@
         </div>
       </section>
 
-      <section id="interests" data-spy aria-labelledby="h-int">
+      <section id="interests" class="glass" data-spy aria-labelledby="h-int">
         <h2 class="sec-h" id="h-int">Interests</h2>
         <p class="sec-note">The parts that don't fit on a resume.</p>
         <!-- photo sets live in GALLERIES (script below) -->
