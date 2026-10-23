@@ -99,7 +99,7 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    padding: 0 16px;
+    padding: 6px 16px;
     background: #000;
     color: #FFF;
     font-size: 0.74rem;
@@ -208,7 +208,7 @@
   }
   .spy-ind.on { opacity: 1; }
   /* tallies like "EXPERIENCE (3)": nudged up instead of vertical-align so they don't push the line height */
-  .n { position: relative; top: -0.55em; margin-left: 3px; font-size: 0.68em; font-weight: 400; letter-spacing: 0; color: inherit; opacity: .75; }
+  .n { position: relative; top: -0.55em; margin-left: 3px; font-size: 0.68em; font-weight: 400; letter-spacing: 0; color: inherit; }
 
   /* ---------- contact + resume ---------- */
   .contacts { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
@@ -359,7 +359,7 @@
   .creds li:first-child { border-top: none; padding-top: 0; }
   .creds li:last-child { padding-bottom: 0; }
   .creds .by { color: var(--faint); font-size: 0.78rem; text-align: right; }
-  .creds .fresh { display: inline-block; margin-left: 10px; padding: 1px 7px; border-radius: 4px; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #0A0A0A; background: var(--signal); vertical-align: 2px; }
+  .creds .fresh { display: inline-block; margin-left: 10px; padding: 2px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #0A0A0A; background: var(--signal); vertical-align: 2px; }
 
   /* ---------- interests ---------- */
   .interests { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 12px; }
@@ -382,7 +382,7 @@
     bottom: 10px;
     padding: 3px 8px;
     border-radius: 4px;
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: #FFF;
@@ -522,7 +522,7 @@
   }
 
   @media (max-width: 560px) {
-    .bar { font-size: 0.68rem; }
+    .bar { font-size: 0.7rem; }
     .bar .bar-role { display: none; }
     .lead { font-size: 1.06rem; }
     .role-item { grid-template-columns: minmax(0, 1fr); }
