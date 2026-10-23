@@ -61,6 +61,8 @@
     --aside-chip-hover: #EFE6FD;
     /* highlighter stroke behind the lead's job title */
     --mark: var(--lav);
+    /* contour lines behind the reading pane */
+    --topo: #E4D8FA;
     color-scheme: light;
   }
   :root[data-theme="dark"] {
@@ -80,6 +82,7 @@
     --aside-chip-hover: #272035;
     /* solid lavender behind light text would be unreadable, so the stroke is a deep violet in dark mode */
     --mark: #4A3A66;
+    --topo: #2A2140;
     color-scheme: dark;
   }
 
@@ -265,7 +268,19 @@
   .resume-btn .ico { width: 16px; height: 16px; stroke-width: 1.8; }
 
   /* ================= reading pane ================= */
-  .main { min-width: 0; }
+  .main { position: relative; isolation: isolate; min-width: 0; }
+  /* topographic map lines (a nod to climbing): the SVG is only a stencil, so the colour comes from --topo and follows the theme.
+     The tile wraps seamlessly; the section boxes are opaque, so the lines only show in the gaps between them. */
+  .main::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--topo);
+    -webkit-mask: url(images/topo.svg) 0 0 / 1200px 1200px repeat;
+            mask: url(images/topo.svg) 0 0 / 1200px 1200px repeat;
+    pointer-events: none;
+  }
   /* centred in the reading pane so the content owns the space instead of leaving an empty right gutter */
   .inner {
     max-width: calc(880px + 2 * clamp(32px, 5vw, 72px));
