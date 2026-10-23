@@ -85,8 +85,6 @@
     top: 0;
     height: 100vh;
     height: 100dvh;
-    overflow-y: auto;
-    scrollbar-width: none;
     display: flex;
     flex-direction: column;
     padding: 40px 36px 32px;
@@ -94,7 +92,6 @@
     border-right: 1px solid var(--line);
     isolation: isolate;
   }
-  .aside::-webkit-scrollbar { display: none; }
   /* dot grid lives only here, fading out toward the reading pane */
   .aside::before {
     content: "";
@@ -217,11 +214,6 @@
     background: var(--accent);
   }
   .spy-ind.on { opacity: 1; }
-  .spy .out { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line-strong); }
-  .spy .out a { display: flex; align-items: center; gap: 8px; color: var(--accent); font-weight: 600; }
-  .spy .out a:hover { color: var(--accent); background: color-mix(in oklab, var(--accent) 10%, transparent); }
-  .spy .out .ico { width: 15px; height: 15px; stroke-width: 1.8; transition: transform .3s var(--ease); }
-  .spy .out a:hover .ico { transform: translate(2px, -2px); }
 
   /* ---------- contact + resume ---------- */
   .aside-foot { margin-top: auto; padding-top: 36px; }
@@ -326,26 +318,6 @@
   .rail .live { display: inline-flex; align-items: center; gap: 7px; color: var(--accent); font-weight: 500; }
   .rail .live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
   .gist { grid-column: 1; margin: 10px 0 0; max-width: 54ch; font-size: 0.9rem; color: var(--soft); line-height: 1.65; }
-  /* tinted accent button: stands out from the text without a solid fill */
-  .more {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 28px;
-    padding: 13px 20px 13px 22px;
-    border-radius: 11px;
-    font-size: 0.92rem;
-    font-weight: 600;
-    color: var(--accent);
-    background: color-mix(in oklab, var(--accent) 14%, transparent);
-    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 45%, transparent);
-    text-decoration: none;
-    transition: transform .25s var(--ease), background-color .25s ease;
-  }
-  .more .ico { width: 17px; height: 17px; stroke-width: 1.9; transition: transform .3s var(--ease); }
-  .more:hover { transform: translateY(-2px); background: color-mix(in oklab, var(--accent) 22%, transparent); }
-  .more:active { transform: translateY(0); }
-  .more:hover .ico { transform: translate(2px, -2px); }
 
   /* ---------- toolkit ---------- */
   .kit { margin: 0; display: grid; gap: 0; }
@@ -483,6 +455,24 @@
   }
 
   /* ================= compact (tablet / phone) ================= */
+  /* short desktop windows: tighten the sidebar so it fits the viewport without its own scroll */
+  @media (min-width: 901px) and (max-height: 780px) {
+    .aside { padding-top: 28px; padding-bottom: 24px; }
+    .avatar { width: 64px; height: 64px; }
+    .name { margin-top: 16px; }
+    .badge { margin-top: 12px; }
+    .intro { margin-top: 12px; }
+    .spy { margin-top: 24px; }
+    .aside-foot { padding-top: 20px; }
+    .contacts a { padding: 3px 0; }
+    .resume-btn { margin-top: 12px; }
+  }
+  /* too short to fit even when tight: let the sidebar scroll with the page instead of clipping */
+  @media (min-width: 901px) and (max-height: 670px) {
+    .aside { position: relative; height: auto; }
+    .aside-foot { margin-top: 0; }
+  }
+
   @media (max-width: 900px) {
     .page { display: flex; flex-direction: column; }
     .aside { display: contents; }
@@ -545,8 +535,6 @@
     .spy a { padding: 7px 14px 7px 28px; border-radius: 999px; white-space: nowrap; font-size: 0.82rem; }
     .spy-ind { border-radius: 999px; }
     .spy-ind::before { left: 12px; }
-    .spy .out { margin: 0; padding: 0; border: 0; }
-    .spy .out a { padding-left: 14px; }
 
     .main { order: 4; }
     .inner { margin: 0 auto; padding: 48px 24px 0; }
@@ -599,12 +587,6 @@
         <li><a href="#toolkit">Toolkit</a></li>
         <li><a href="#credentials">Credentials</a></li>
         <li><a href="#interests">Interests</a></li>
-        <li class="out">
-          <a href="Jiho_Bae_Resume.pdf" target="_blank" rel="noopener">
-            Resume
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16L16 8M9.5 8H16v6.5"/></svg>
-          </a>
-        </li>
       </ul>
     </nav>
 
@@ -669,10 +651,6 @@
             <p class="gist">Help desk and Microsoft 365 administration, plus Power Platform automations for every department.</p>
           </li>
         </ol>
-        <a class="more" href="Jiho_Bae_Resume.pdf" target="_blank" rel="noopener">
-          Full resume
-          <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 16L16 8M9.5 8H16v6.5"/></svg>
-        </a>
       </section>
 
       <section id="toolkit" data-spy aria-labelledby="h-kit">
