@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://bonkho.github.io/images/og.jpg">
 <meta name="theme-color" content="#000000">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000000'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23CDF46A'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000000'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23D0F491'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -36,8 +36,11 @@
     --ease: cubic-bezier(.16, 1, .3, 1);
     --aside-w: 368px;
     --bar-h: 32px;
-    /* the one colour on the page: status dots and text selection, never text on white */
-    --signal: #CDF46A;
+    /* two pastels, each with one job, always as a background behind black text (never as text on white):
+       lime = "now / you are here", lavender = labels and tags */
+    --lime: #D0F491;
+    --lav: #E9D5FF;
+    --on-color: #0A0A0A;
   }
   :root[data-theme="light"] {
     --bg: #FFFFFF;
@@ -50,7 +53,14 @@
     --chip-hover: #EAEAEA;
     --raise: #F3F3F3;
     /* lime alone disappears on white, so dots get a faint ring in light mode */
-    --signal-ring: 0 0 0 1px rgba(0, 0, 0, .16);
+    --lime-ring: 0 0 0 1px rgba(0, 0, 0, .16);
+    /* sidebar sits on a lavender wash */
+    --aside-bg: #F7F2FF;
+    --aside-line: #E6DAF8;
+    --aside-chip: #FFFFFF;
+    --aside-chip-hover: #EFE6FD;
+    /* highlighter stroke behind the lead's job title */
+    --mark: var(--lav);
     color-scheme: light;
   }
   :root[data-theme="dark"] {
@@ -63,7 +73,13 @@
     --chip: #181818;
     --chip-hover: #222222;
     --raise: #151515;
-    --signal-ring: 0 0 0 0 transparent;
+    --lime-ring: 0 0 0 0 transparent;
+    --aside-bg: #13101A;
+    --aside-line: #262033;
+    --aside-chip: #1D1828;
+    --aside-chip-hover: #272035;
+    /* solid lavender behind light text would be unreadable, so the stroke is a deep violet in dark mode */
+    --mark: #4A3A66;
     color-scheme: dark;
   }
 
@@ -80,14 +96,14 @@
     caret-color: var(--ink);
     transition: background-color .3s ease, color .3s ease;
   }
-  ::selection { background: var(--signal); color: #0A0A0A; }
+  ::selection { background: var(--lav); color: var(--on-color); }
   a { color: inherit; text-decoration-color: var(--line-strong); text-underline-offset: 0.24em; text-decoration-thickness: 1px; }
   a:hover { text-decoration-color: currentColor; }
   :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
   svg.ico { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
   /* "//" separators are visual punctuation; screen readers get the plain spaces around them */
   .sep { font-style: normal; color: var(--faint); }
-  .dot { display: inline-block; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--signal); box-shadow: var(--signal-ring); }
+  .dot { display: inline-block; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: var(--lime-ring); }
 
   /* ================= status bar ================= */
   .bar {
@@ -125,8 +141,11 @@
     flex-direction: column;
     gap: 36px;
     padding: 36px 32px 28px;
-    background: var(--bg);
-    border-right: 1px solid var(--line);
+    background: var(--aside-bg);
+    border-right: 1px solid var(--aside-line);
+    /* chips inside the sidebar are white on the lavender wash */
+    --chip: var(--aside-chip);
+    --chip-hover: var(--aside-chip-hover);
   }
 
   /* ---------- identity ---------- */
@@ -181,7 +200,7 @@
     transition: color .3s ease, background-color .2s ease;
   }
   .spy a:not([aria-current="true"]):hover { color: var(--ink); background: var(--chip-hover); }
-  .spy a[aria-current="true"] { color: var(--bg); }
+  .spy a[aria-current="true"] { color: var(--on-color); }
   .spy-ind {
     position: absolute;
     top: 0;
@@ -190,7 +209,7 @@
     width: 0;
     height: 0;
     border-radius: 4px;
-    background: var(--ink);
+    background: var(--lime);
     opacity: 0;
     pointer-events: none;
     transition: transform .55s var(--ease), width .55s var(--ease), height .55s var(--ease), opacity .3s ease;
@@ -204,7 +223,7 @@
     height: 6px;
     margin-top: -3px;
     border-radius: 50%;
-    background: var(--signal);
+    background: var(--on-color);
   }
   .spy-ind.on { opacity: 1; }
   /* tallies like "EXPERIENCE (3)": nudged up instead of vertical-align so they don't push the line height */
@@ -242,9 +261,9 @@
     text-decoration: none;
     color: var(--bg);
     background: var(--ink);
-    transition: opacity .25s ease;
+    transition: color .2s ease, background-color .2s ease;
   }
-  .resume-btn:hover { opacity: .82; }
+  .resume-btn:hover { color: var(--on-color); background: var(--lime); }
   .resume-btn .ico { width: 16px; height: 16px; stroke-width: 1.8; }
 
   /* ================= reading pane ================= */
@@ -263,7 +282,15 @@
     line-height: 1.7;
     color: var(--soft);
   }
-  .lead strong { color: var(--ink); font-weight: 500; }
+  .lead strong {
+    color: var(--ink);
+    font-weight: 500;
+    /* highlighter stroke across the lower half of the letters */
+    background: linear-gradient(transparent 40%, var(--mark) 40%, var(--mark) 88%, transparent 88%);
+    -webkit-box-decoration-break: clone;
+            box-decoration-break: clone;
+    padding: 0 2px;
+  }
 
   /* flat boxes ruled with a hairline, like product cards on a white shelf */
   section[data-spy] {
@@ -295,8 +322,8 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: var(--signal);
-    box-shadow: var(--signal-ring);
+    background: var(--lime);
+    box-shadow: var(--lime-ring);
     transform: scale(0);
     transition: transform .5s var(--ease);
   }
@@ -329,16 +356,15 @@
     white-space: nowrap;
     padding-top: 4px;
   }
-  .rail .live { display: inline-flex; align-items: center; gap: 7px; color: var(--ink); font-weight: 500; }
-  .rail .live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--signal); box-shadow: var(--signal-ring); }
+  .rail .live { display: inline-block; padding: 1px 7px; border-radius: 4px; color: var(--on-color); background: var(--lime); font-weight: 500; }
   .gist { grid-column: 1; margin: 10px 0 0; max-width: 56ch; font-size: 0.88rem; color: var(--soft); line-height: 1.65; }
 
   /* ---------- toolkit ---------- */
   .kit { margin: 0; display: grid; gap: 0; }
-  .kit-row { display: grid; grid-template-columns: 14ch minmax(0, 1fr); gap: 20px; padding: 12px 0; border-top: 1px solid var(--line); }
+  .kit-row { display: grid; grid-template-columns: 11.5rem minmax(0, 1fr); gap: 20px; padding: 12px 0; border-top: 1px solid var(--line); }
   .kit-row:first-child { border-top: none; padding-top: 0; }
   .kit-row:last-child { padding-bottom: 0; }
-  .kit dt { color: var(--faint); font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; padding-top: 2px; }
+  .kit dt { justify-self: start; align-self: start; padding: 1px 8px; border-radius: 4px; font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--on-color); background: var(--lav); }
   .kit dd { margin: 0; }
   .kit ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px 0; font-size: 0.88rem; }
   .kit li:not(:last-child)::after { content: "/"; margin: 0 10px; color: var(--line-strong); }
@@ -396,7 +422,8 @@
     font-size: 0.76rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    background: var(--chip);
+    color: var(--on-color);
+    background: var(--lav);
   }
 
   /* ---------- photo viewer ---------- */
@@ -442,9 +469,11 @@
 
   /* ---------- footer ---------- */
   .foot {
-    margin-top: 96px;
-    padding: 24px 0 64px;
-    border-top: 1px solid var(--line);
+    margin: 96px 0 48px;
+    padding: 18px 22px;
+    border-radius: 6px;
+    background: var(--lime);
+    color: var(--on-color);
     display: flex;
     justify-content: space-between;
     gap: 16px;
@@ -452,10 +481,9 @@
     font-size: 0.74rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--faint);
   }
-  .foot .sep { margin: 0 4px; }
-  .foot a { color: var(--soft); }
+  .foot .sep { margin: 0 4px; color: inherit; opacity: .55; }
+  .foot a { color: inherit; text-decoration-color: currentColor; }
 
   /* ================= reveals (each section moves its own way) ================= */
   [data-reveal], [data-reveal-child] { transition: opacity .9s var(--ease), transform .9s var(--ease), filter .9s var(--ease), clip-path 1s var(--ease); }
@@ -482,8 +510,20 @@
     .contacts a { padding: 3px 0; }
     .resume-btn { margin-top: 12px; }
   }
-  /* too short to fit even when tight: let the sidebar scroll with the page instead of clipping */
+  /* shorter still: drop the intro lines (the city is in the status bar) and set contacts in one row */
   @media (min-width: 901px) and (max-height: 660px) {
+    .aside { gap: 18px; padding-top: 20px; padding-bottom: 18px; }
+    .avatar { width: 52px; height: 52px; }
+    .theme-btn { width: 34px; height: 34px; }
+    .name { margin-top: 12px; font-size: 1.35rem; }
+    .intro { display: none; }
+    .contacts { display: flex; flex-wrap: wrap; gap: 4px 18px; }
+    .contacts .full { display: none; }
+    .contacts .short { display: inline; }
+    .resume-btn { padding-block: 9px; }
+  }
+  /* too short to fit even when tight: let the sidebar scroll with the page instead of clipping */
+  @media (min-width: 901px) and (max-height: 480px) {
     .aside { position: relative; top: 0; height: auto; }
     .spy { margin-block: 0; }
   }
@@ -492,7 +532,8 @@
     .page { display: flex; flex-direction: column; }
     .aside { display: contents; }
 
-    .id-block { order: 1; padding: 28px 24px 0; }
+    /* .aside is display:contents here, so its lavender wash goes on the two blocks instead */
+    .id-block { order: 1; padding: 28px 24px 0; background: var(--aside-bg); }
     .avatar { width: 64px; height: 64px; }
     .name { margin-top: 18px; font-size: 1.35rem; }
     .intro { max-width: 52ch; }
@@ -501,7 +542,8 @@
       order: 2;
       margin: 0;
       padding: 20px 24px 22px;
-      border-bottom: 1px solid var(--line);
+      background: var(--aside-bg);
+      border-bottom: 1px solid var(--aside-line);
       display: flex;
       flex-wrap: wrap;
       align-items: center;
