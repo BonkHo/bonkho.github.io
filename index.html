@@ -272,12 +272,14 @@
 
   /* ================= reading pane ================= */
   .main { min-width: 0; }
+  /* centred in the reading pane so the panels own the space instead of leaving an empty right gutter */
   .inner {
-    max-width: 70ch;
-    margin: 0 auto 0 clamp(36px, 7vw, 120px);
-    padding: 104px 32px 0 0;
+    max-width: calc(880px + 2 * clamp(32px, 5vw, 72px));
+    margin: 0 auto;
+    padding: 104px clamp(32px, 5vw, 72px) 0;
   }
   .lead {
+    max-width: 62ch;
     margin: 0;
     font-size: 1.16rem;
     line-height: 1.75;
