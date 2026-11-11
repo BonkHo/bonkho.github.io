@@ -62,10 +62,10 @@
     /* highlighter stroke behind the lead's job title */
     --mark: var(--lav);
     /* contour lines behind the reading pane */
-    --topo: #ECE4FB;
+    --topo: url(images/topo-light.svg);   /* lines in #ECE4FB */
     /* glossy glass over the contour lines: a white sheen, a rim that catches light top-left and picks up lavender bottom-right */
     --glass-fill: linear-gradient(150deg, rgba(255,255,255,.82), rgba(255,255,255,.56) 55%, rgba(255,255,255,.70));
-    --glass-rim: linear-gradient(140deg, rgba(255,255,255,1), rgba(255,255,255,.35) 35%, rgba(10,10,10,.08) 65%, rgba(185,150,240,.55));
+    --glass-rim: inset 1px 1px 0 rgba(255,255,255,1), inset -1px -1px 0 rgba(185,150,240,.55);
     --glass-shadow: 0 0 0 1px rgba(10,10,10,.04), 0 24px 48px -32px rgba(70,45,130,.30), 0 2px 6px -2px rgba(70,45,130,.08), inset 0 1px 0 rgba(255,255,255,.9);
     color-scheme: light;
   }
@@ -86,10 +86,10 @@
     --aside-chip-hover: #272035;
     /* solid lavender behind light text would be unreadable, so the stroke is a deep violet in dark mode */
     --mark: #4A3A66;
-    --topo: #211A30;
+    --topo: url(images/topo-dark.svg);    /* lines in #211A30 */
     /* in dark mode the sheen sits on a smoky base so the panel stays darker than any line behind it */
     --glass-fill: linear-gradient(150deg, rgba(255,255,255,.07), rgba(255,255,255,.02) 55%, rgba(255,255,255,.04)), linear-gradient(rgba(11,11,11,.55), rgba(11,11,11,.55));
-    --glass-rim: linear-gradient(140deg, rgba(255,255,255,.26), rgba(255,255,255,.05) 35%, rgba(255,255,255,.02) 65%, rgba(233,213,255,.30));
+    --glass-rim: inset 1px 1px 0 rgba(255,255,255,.26), inset -1px -1px 0 rgba(233,213,255,.30);
     --glass-shadow: 0 24px 48px -30px rgba(0,0,0,.85), 0 2px 6px -2px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.06);
     color-scheme: dark;
   }
@@ -277,16 +277,16 @@
 
   /* ================= reading pane ================= */
   .main { position: relative; isolation: isolate; min-width: 0; }
-  /* topographic map lines (a nod to climbing): the SVG is only a stencil, so the colour comes from --topo and follows the theme.
-     The tile wraps seamlessly; the section boxes are opaque, so the lines only show in the gaps between them. */
+  /* topographic map lines (a nod to climbing): one SVG per theme with the line colour baked in (images/topo-*.svg are
+     images/topo.svg with its stroke recoloured). The tile wraps seamlessly; the section boxes are opaque, so the lines
+     only show in the gaps between them. A plain background image, not a mask: Firefox redraws a mask on the CPU
+     on every scroll frame (~11 fps on a 4K laptop), while an image is rasterised once. */
   .main::before {
     content: "";
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: var(--topo);
-    -webkit-mask: url(images/topo.svg) 0 0 / 1200px 1200px repeat;
-            mask: url(images/topo.svg) 0 0 / 1200px 1200px repeat;
+    background: var(--topo) 0 0 / 1200px 1200px repeat;
     pointer-events: none;
   }
   /* centred in the reading pane so the content owns the space instead of leaving an empty right gutter */
@@ -315,27 +315,15 @@
   }
 
   /* glossy glass: a translucent sheen that softly blurs the contour lines behind it, a light-catching rim and a soft drop shadow */
+  /* The rim is two 1px inset highlights, bright top-left and lavender bottom-right, so the edge catches the light.
+     (Not a gradient cut out with a mask: Firefox redraws mask cut-outs on every scroll frame.) */
   .glass {
     position: relative;
     border-radius: 12px;
     background: var(--glass-fill);
     -webkit-backdrop-filter: blur(14px) saturate(150%);
             backdrop-filter: blur(14px) saturate(150%);
-    box-shadow: var(--glass-shadow);
-  }
-  /* the rim is a 1px gradient border cut out with a mask, so it can fade from bright to lavender around the edge */
-  .glass::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    padding: 1px;
-    border-radius: inherit;
-    background: var(--glass-rim);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            mask-composite: exclude;
-    pointer-events: none;
+    box-shadow: var(--glass-rim), var(--glass-shadow);
   }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     .glass { background: var(--bg); }
